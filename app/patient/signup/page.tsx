@@ -66,7 +66,7 @@ export default function PatientSignupPage() {
     "w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 text-medical-text placeholder-gray-400 focus:border-medical-primary focus:ring-2 focus:ring-blue-100 transition-all outline-none";
 
   return (
-    <AnimatedBackground>
+    <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
       <div className="min-h-screen flex items-center justify-center px-4 py-8">
         <div className="w-full max-w-lg">
           <motion.div
@@ -81,7 +81,9 @@ export default function PatientSignupPage() {
             <p className="text-medical-text-secondary mt-1">Create your AIIMS Delhi patient account</p>
           </motion.div>
 
-          <GlassCard>
+          <div className="super-glass p-8 relative overflow-hidden group">
+  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+  <div className="relative z-10">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-medical-text mb-1">Full Name</label>
@@ -198,7 +200,8 @@ export default function PatientSignupPage() {
                 </button>
               </p>
             </form>
-          </GlassCard>
+            </div>
+</div>
         </div>
       </div>
 
