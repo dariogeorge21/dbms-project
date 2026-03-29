@@ -68,12 +68,12 @@ export default function AdminPatientsPage() {
     finally { setSubmitting(false); }
   };
 
-  if (loading) return <AnimatedBackground><LoadingSpinner /></AnimatedBackground>;
+  if (loading) return <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/"><LoadingSpinner /></AnimatedBackground>;
 
   const inputClass = "w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 text-medical-text placeholder-gray-400 focus:border-medical-primary focus:ring-2 focus:ring-blue-100 transition-all outline-none text-sm";
 
   return (
-    <AnimatedBackground>
+    <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
       <Navbar role="admin" userName="Administrator" />
       <div className="px-4 md:px-8 pb-8 max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-6">
@@ -87,7 +87,9 @@ export default function AdminPatientsPage() {
           <input value={search} onChange={(e) => setSearch(e.target.value)} className={`${inputClass} max-w-md`} placeholder="Search by name, ID, email, phone..." />
         </div>
 
-        <GlassCard>
+        <div className="super-glass p-8 relative overflow-hidden group">
+  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+  <div className="relative z-10">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
@@ -114,7 +116,8 @@ export default function AdminPatientsPage() {
             </table>
             {patients.length === 0 && <p className="text-center py-8 text-medical-text-secondary">No patients found</p>}
           </div>
-        </GlassCard>
+          </div>
+</div>
       </div>
 
       <Modal isOpen={showEdit} onClose={() => setShowEdit(false)} title={`Edit Patient — ${selected?.patientId}`}>
