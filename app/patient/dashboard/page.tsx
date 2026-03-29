@@ -114,7 +114,7 @@ export default function PatientDashboardPage() {
 
   if (loading) {
     return (
-      <AnimatedBackground>
+      <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
         <LoadingSpinner text="Loading dashboard..." />
       </AnimatedBackground>
     );
@@ -124,7 +124,7 @@ export default function PatientDashboardPage() {
     "w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 text-medical-text placeholder-gray-400 focus:border-medical-primary focus:ring-2 focus:ring-blue-100 transition-all outline-none";
 
   return (
-    <AnimatedBackground>
+    <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
       <Navbar
         role="patient"
         userName={profile?.name}
@@ -147,7 +147,9 @@ export default function PatientDashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Profile Card */}
           <div className="lg:col-span-1">
-            <GlassCard>
+            <div className="super-glass p-8 relative overflow-hidden group">
+  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+  <div className="relative z-10">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-bold text-medical-text">Profile</h2>
                 <button
@@ -233,12 +235,15 @@ export default function PatientDashboardPage() {
               >
                 Book Appointment
               </motion.button>
-            </GlassCard>
+              </div>
+</div>
           </div>
 
           {/* Appointments */}
           <div className="lg:col-span-2">
-            <GlassCard>
+            <div className="super-glass p-8 relative overflow-hidden group">
+  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+  <div className="relative z-10">
               <h2 className="text-lg font-bold text-medical-text mb-4">My Appointments</h2>
               {appointments.length === 0 ? (
                 <div className="text-center py-12">
@@ -281,7 +286,8 @@ export default function PatientDashboardPage() {
                   ))}
                 </div>
               )}
-            </GlassCard>
+              </div>
+</div>
           </div>
         </div>
       </div>
