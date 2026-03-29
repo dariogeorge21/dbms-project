@@ -44,28 +44,31 @@ export default function PatientLoginPage() {
   };
 
   const inputClass =
-    "w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 text-medical-text placeholder-gray-400 focus:border-medical-primary focus:ring-2 focus:ring-blue-100 transition-all outline-none";
+    "w-full px-4 py-3.5 rounded-xl bg-white/60 border border-white/80 text-medical-text placeholder-gray-500 focus:bg-white/90 focus:border-medical-primary focus:ring-4 focus:ring-medical-primary/20 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)] outline-none font-medium";
 
   return (
-    <AnimatedBackground>
-      <div className="min-h-screen flex items-center justify-center px-4">
+    <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
+      <div className="min-h-screen flex items-center justify-center px-4 relative z-10">
         <div className="w-full max-w-md">
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, type: "spring", bounce: 0.4 }}
             className="text-center mb-8"
           >
-            <div className="w-14 h-14 mx-auto rounded-xl bg-gradient-to-br from-medical-primary to-medical-primary-light flex items-center justify-center shadow-lg mb-4">
-              <span className="text-white font-bold text-xl">A</span>
-            </div>
-            <h1 className="text-2xl font-bold text-medical-text">Patient Login</h1>
-            <p className="text-medical-text-secondary mt-1">Welcome back to AIIMS Delhi</p>
+            <h1 className="text-3xl font-extrabold text-medical-text drop-shadow-sm">Patient Login</h1>
+            <p className="text-medical-text-secondary/90 mt-2 font-medium">Welcome back to AIIMS Delhi</p>
           </motion.div>
 
-          <GlassCard>
-            <form onSubmit={handleSubmit} className="space-y-5">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.1, duration: 0.5 }}
+            className="super-glass p-8"
+          >
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-medical-text mb-1">Email or Phone Number</label>
+                <label className="block text-sm font-bold text-medical-text mb-2">Email or Phone Number</label>
                 <input
                   type="text"
                   required
@@ -77,7 +80,7 @@ export default function PatientLoginPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-medical-text mb-1">Password</label>
+                <label className="block text-sm font-bold text-medical-text mb-2">Password</label>
                 <input
                   type="password"
                   required
@@ -90,9 +93,9 @@ export default function PatientLoginPage() {
 
               {error && (
                 <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-sm text-medical-danger bg-red-50 px-4 py-2 rounded-lg"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-sm font-semibold text-red-600 bg-red-100/80 border border-red-200 px-4 py-3 rounded-xl shadow-sm"
                 >
                   {error}
                 </motion.p>
@@ -101,35 +104,38 @@ export default function PatientLoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-medical-primary to-medical-primary-light text-white font-semibold btn-glow disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-3.5 rounded-xl btn-super-glass text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden"
               >
-                {loading ? "Logging in..." : "Login"}
+                <span className="relative z-10 text-medical-primary group-hover:text-[#0056b3] transition-colors">
+                  {loading ? "Authenticating..." : "Sign In"}
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />
               </button>
 
-              <p className="text-center text-sm text-medical-text-secondary">
+              <p className="text-center text-sm font-medium text-medical-text-secondary/80 mt-4">
                 Don&apos;t have an account?{" "}
                 <button
                   type="button"
                   onClick={() => router.push("/patient/signup")}
-                  className="text-medical-primary font-medium hover:underline"
+                  className="text-medical-primary font-bold hover:text-[#0056b3] transition-colors"
                 >
                   Register here
                 </button>
               </p>
             </form>
-          </GlassCard>
+          </motion.div>
 
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="text-center mt-6"
+            transition={{ delay: 0.3 }}
+            className="text-center mt-8"
           >
             <button
-              onClick={() => router.push("/patient")}
-              className="text-sm text-medical-text-secondary hover:text-medical-primary transition-colors"
+              onClick={() => router.push("/")}
+              className="text-sm font-bold text-medical-text-secondary/80 hover:text-medical-primary transition-colors hover:-translate-x-1 inline-block transform duration-200"
             >
-              ← Back
+              &larr; Back to Home
             </button>
           </motion.div>
         </div>
