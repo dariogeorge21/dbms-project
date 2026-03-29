@@ -124,13 +124,13 @@ export default function ConsultationPage() {
     }
   };
 
-  if (loading) return <AnimatedBackground><LoadingSpinner text="Loading consultation..." /></AnimatedBackground>;
+  if (loading) return <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/"><LoadingSpinner text="Loading consultation..." /></AnimatedBackground>;
 
   const apt = appointment as Record<string, unknown>;
   const inputClass = "w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 text-medical-text placeholder-gray-400 focus:border-medical-primary focus:ring-2 focus:ring-blue-100 transition-all outline-none";
 
   return (
-    <AnimatedBackground>
+    <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
       <Navbar role="doctor" userName={profile?.name} userIdentifier={profile?.doctorId} />
 
       <div className="px-4 md:px-8 pb-8 max-w-5xl mx-auto">
@@ -141,7 +141,9 @@ export default function ConsultationPage() {
 
         {/* Patient Summary */}
         {apt && (
-          <GlassCard className="mb-6">
+          <div className="super-glass p-8 relative overflow-hidden group mb-6">
+  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+  <div className="relative z-10">
             <h2 className="text-lg font-bold text-medical-text mb-3">Patient Summary</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
               <div><span className="text-medical-text-secondary">Name:</span> <span className="font-medium ml-1">{apt.patientName as string}</span></div>
@@ -151,11 +153,14 @@ export default function ConsultationPage() {
               <div className="col-span-2"><span className="text-medical-text-secondary">Problem:</span> <span className="font-medium ml-1">{apt.problemDescription as string}</span></div>
               <div className="col-span-2"><span className="text-medical-text-secondary">History:</span> <span className="font-medium ml-1">{apt.previousMedicalHistory as string}</span></div>
             </div>
-          </GlassCard>
+            </div>
+</div>
         )}
 
         {/* Consultation Form */}
-        <GlassCard>
+        <div className="super-glass p-8 relative overflow-hidden group">
+  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+  <div className="relative z-10">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Vital Signs */}
             <div>
@@ -229,7 +234,8 @@ export default function ConsultationPage() {
               {submitting ? "Saving..." : "Complete Consultation"}
             </button>
           </form>
-        </GlassCard>
+          </div>
+</div>
       </div>
 
       <SuccessModal isOpen={showSuccess} onClose={() => { setShowSuccess(false); router.push("/doctor/dashboard"); }} message="Consultation recorded and appointment marked as completed!" />
