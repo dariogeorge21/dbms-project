@@ -50,8 +50,13 @@ export default function Navbar({ role, userName, userIdentifier }: NavbarProps) 
     >
       <div className="flex items-center gap-8">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-[12px] bg-gradient-to-br from-[#00E5FF] via-[#007BFF] to-[#0056b3] flex items-center justify-center shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),_0_8px_16px_rgba(0,123,255,0.3)] transform transition-transform group-hover:scale-105 group-hover:rotate-3">
-            <span className="text-white font-extrabold text-lg drop-shadow-md">A</span>
+          <div className="w-10 h-10 flex items-center justify-center transform transition-transform group-hover:scale-105 group-hover:rotate-3 relative">
+            <div className="absolute inset-0 bg-white/20 rounded-xl blur-md" />
+            <img 
+              src="https://upload.wikimedia.org/wikipedia/en/8/85/All_India_Institute_of_Medical_Sciences%2C_Delhi.svg" 
+              alt="AIIMS Logo" 
+              className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+            />
           </div>
           <span className="font-extrabold text-medical-text text-xl hidden sm:inline tracking-tight">AIIMS<span className="text-gradient-glossy ml-1">Delhi</span></span>
         </Link>

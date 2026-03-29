@@ -69,8 +69,13 @@ export default function LandingPage() {
             className="super-glass mx-4 mt-6 px-6 py-4 flex items-center justify-between shadow-[0_8px_32px_rgba(0,123,255,0.1)]"
           >
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-medical-primary to-medical-primary-light flex items-center justify-center shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),_0_8px_16px_rgba(0,123,255,0.3)] transform transition-transform hover:scale-105">
-                <span className="text-white font-bold text-xl drop-shadow-md">A</span>
+              <div className="w-12 h-12 flex items-center justify-center transform transition-transform hover:scale-105 relative">
+                <div className="absolute inset-0 bg-white/30 rounded-xl blur-lg" />
+                <img 
+                  src="https://upload.wikimedia.org/wikipedia/en/8/85/All_India_Institute_of_Medical_Sciences%2C_Delhi.svg" 
+                  alt="AIIMS Logo" 
+                  className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]"
+                />
               </div>
               <div>
                 <h1 className="font-extrabold text-medical-text text-xl leading-tight tracking-tight">AIIMS Delhi</h1>
@@ -183,8 +188,13 @@ export default function LandingPage() {
             <div className="max-w-6xl mx-auto super-glass p-8 md:p-12 mb-8 grid grid-cols-1 md:grid-cols-4 gap-8">
               <div className="md:col-span-2">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-medical-primary to-medical-primary-light flex items-center justify-center shadow-lg">
-                    <span className="text-white font-bold text-lg drop-shadow-md">A</span>
+                  <div className="w-10 h-10 flex items-center justify-center relative">
+                    <div className="absolute inset-0 bg-white/30 rounded-xl blur-md" />
+                    <img 
+                      src="https://upload.wikimedia.org/wikipedia/en/8/85/All_India_Institute_of_Medical_Sciences%2C_Delhi.svg" 
+                      alt="AIIMS Logo" 
+                      className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+                    />
                   </div>
                   <div>
                     <h2 className="font-extrabold text-medical-text text-lg leading-tight tracking-tight">AIIMS Delhi</h2>
