@@ -74,13 +74,13 @@ export default function DoctorDashboardPage() {
     return colors[status] || "bg-gray-50 text-gray-700";
   };
 
-  if (loading) return <AnimatedBackground><LoadingSpinner text="Loading dashboard..." /></AnimatedBackground>;
+  if (loading) return <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/"><LoadingSpinner text="Loading dashboard..." /></AnimatedBackground>;
 
   const assigned = appointments.filter((a) => a.status === "assigned").length;
   const completed = appointments.filter((a) => a.status === "completed").length;
 
   return (
-    <AnimatedBackground>
+    <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
       <Navbar role="doctor" userName={profile?.name} userIdentifier={profile?.doctorId} />
 
       <div className="px-4 md:px-8 pb-8 max-w-6xl mx-auto">
@@ -100,7 +100,9 @@ export default function DoctorDashboardPage() {
         </div>
 
         {/* Appointment List */}
-        <GlassCard>
+        <div className="super-glass p-8 relative overflow-hidden group">
+  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+  <div className="relative z-10">
           <h2 className="text-lg font-bold text-medical-text mb-4">Assigned Appointments</h2>
           {appointments.length === 0 ? (
             <p className="text-center py-8 text-medical-text-secondary">No appointments assigned yet</p>
@@ -144,7 +146,8 @@ export default function DoctorDashboardPage() {
               ))}
             </div>
           )}
-        </GlassCard>
+          </div>
+</div>
       </div>
     </AnimatedBackground>
   );
