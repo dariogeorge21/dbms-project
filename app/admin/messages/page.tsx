@@ -48,7 +48,7 @@ export default function AdminMessagesPage() {
     fetchData();
   };
 
-  if (loading) return <AnimatedBackground><LoadingSpinner /></AnimatedBackground>;
+  if (loading) return <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/"><LoadingSpinner /></AnimatedBackground>;
 
   const statusColor: Record<string, string> = {
     new: "bg-blue-50 text-blue-700",
@@ -59,7 +59,7 @@ export default function AdminMessagesPage() {
   const inputClass = "px-3 py-2 rounded-lg bg-white/50 border border-gray-200 text-sm text-medical-text outline-none";
 
   return (
-    <AnimatedBackground>
+    <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
       <Navbar role="admin" userName="Administrator" />
       <div className="px-4 md:px-8 pb-8 max-w-5xl mx-auto">
         <div className="flex items-center justify-between mb-6">
@@ -84,11 +84,16 @@ export default function AdminMessagesPage() {
 
         <div className="space-y-3">
           {messages.length === 0 ? (
-            <GlassCard><p className="text-center py-8 text-medical-text-secondary">No messages found</p></GlassCard>
+            <div className="super-glass p-8 relative overflow-hidden group">
+  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+  <div className="relative z-10"><p className="text-center py-8 text-medical-text-secondary">No messages found</p>  </div>
+</div>
           ) : (
             messages.map((msg, i) => (
               <motion.div key={msg._id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
-                <GlassCard>
+                <div className="super-glass p-8 relative overflow-hidden group">
+  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+  <div className="relative z-10">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${msg.senderRole === "patient" ? "bg-blue-50 text-blue-700" : "bg-emerald-50 text-emerald-700"}`}>
@@ -113,7 +118,8 @@ export default function AdminMessagesPage() {
                       <button onClick={() => updateStatus(msg._id, "closed")} className="text-xs px-3 py-1 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">Close</button>
                     )}
                   </div>
-                </GlassCard>
+                  </div>
+</div>
               </motion.div>
             ))
           )}
