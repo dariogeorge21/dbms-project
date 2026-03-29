@@ -1,16 +1,61 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
-export default function LoadingSpinner({ text = "Loading..." }: { text?: string }) {
+const loadingTexts = [
+  "Decrypting medical records...",
+  "Polishing the stethoscopes...",
+  "Preparing your dashboard...",
+  "Synchronizing securely...",
+  "Connecting to AIIMS Delhi..."
+];
+
+export default function LoadingSpinner({ text }: { text?: string }) {
+  const [randomText, setRandomText] = useState("Loading...");
+
+  useEffect(() => {
+    if (text === undefined) {
+      setRandomText(loadingTexts[Math.floor(Math.random() * loadingTexts.length)]);
+      const interval = setInterval(() => {
+        setRandomText(loadingTexts[Math.floor(Math.random() * loadingTexts.length)]);
+      }, 2500);
+      return () => clearInterval(interval);
+    } else {
+      setRandomText(text);
+    }
+  }, [text]);
+
   return (
-    <div className="flex flex-col items-center justify-center py-20">
-      <motion.div
-        animate={{ rotate: 360 }}
-        transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-        className="w-12 h-12 rounded-full border-4 border-blue-100 border-t-medical-primary"
-      />
-      <p className="mt-4 text-medical-text-secondary font-medium">{text}</p>
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white/80 backdrop-blur-2xl">
+      <div className="relative w-32 h-32 flex items-center justify-center">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
+          className="absolute inset-0 rounded-full border-[6px] border-transparent border-t-medical-primary border-b-medical-primary/30 shadow-[0_0_20px_rgba(0,123,255,0.4)]"
+        />
+        <motion.div
+          animate={{ rotate: -360, scale: [1, 1.1, 1] }}
+          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+          className="absolute inset-4 rounded-full border-[4px] border-transparent border-t-teal-400 border-b-emerald-400/40 opacity-70"
+        />
+        <motion.div
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ repeat: Infinity, duration: 1.5 }}
+          className="w-12 h-12 bg-gradient-to-br from-medical-primary to-teal-400 rounded-xl shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),_0_8px_16px_rgba(16,185,129,0.3)] flex items-center justify-center"
+        >
+          <span className="text-white font-extrabold text-xl drop-shadow-md">A</span>
+        </motion.div>
+      </div>
+      <motion.p
+        key={randomText}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -10 }}
+        className="mt-8 text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-medical-primary to-teal-500 drop-shadow-sm tracking-wide"
+      >
+        {randomText}
+      </motion.p>
     </div>
   );
 }
