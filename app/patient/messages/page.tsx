@@ -71,7 +71,7 @@ export default function PatientMessagesPage() {
     finally { setSubmitting(false); }
   };
 
-  if (loading) return <AnimatedBackground><LoadingSpinner /></AnimatedBackground>;
+  if (loading) return <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/"><LoadingSpinner /></AnimatedBackground>;
 
   const inputClass =
     "w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 text-medical-text placeholder-gray-400 focus:border-medical-primary focus:ring-2 focus:ring-blue-100 transition-all outline-none";
@@ -83,7 +83,7 @@ export default function PatientMessagesPage() {
   };
 
   return (
-    <AnimatedBackground>
+    <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
       <Navbar role="patient" userName={profile?.name} userIdentifier={profile?.patientId} />
       <div className="px-4 md:px-8 pb-8 max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-8">
@@ -98,7 +98,9 @@ export default function PatientMessagesPage() {
 
         {showForm && (
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-            <GlassCard>
+            <div className="super-glass p-8 relative overflow-hidden group">
+  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+  <div className="relative z-10">
               <form onSubmit={handleSend} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -121,11 +123,14 @@ export default function PatientMessagesPage() {
                   {submitting ? "Sending..." : "Send Message"}
                 </button>
               </form>
-            </GlassCard>
+              </div>
+</div>
           </motion.div>
         )}
 
-        <GlassCard>
+        <div className="super-glass p-8 relative overflow-hidden group">
+  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+  <div className="relative z-10">
           {messages.length === 0 ? (
             <p className="text-center py-8 text-medical-text-secondary">No messages sent yet</p>
           ) : (
@@ -154,7 +159,8 @@ export default function PatientMessagesPage() {
               ))}
             </div>
           )}
-        </GlassCard>
+          </div>
+</div>
       </div>
       <SuccessModal isOpen={showSuccess} onClose={() => setShowSuccess(false)} message="Message sent to administration successfully!" />
     </AnimatedBackground>
