@@ -22,7 +22,7 @@ const MessageSchema = new Schema<IMessage>(
     senderId: {
       type: Schema.Types.ObjectId,
       required: true,
-      refPath: "senderRole" === "patient" ? "Patient" : "Doctor",
+      
     },
     senderUserId: {
       type: Schema.Types.ObjectId,
