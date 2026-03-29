@@ -79,12 +79,12 @@ export default function AdminAssignmentsPage() {
     } catch { /* handle */ }
   };
 
-  if (loading) return <AnimatedBackground><LoadingSpinner /></AnimatedBackground>;
+  if (loading) return <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/"><LoadingSpinner /></AnimatedBackground>;
 
   const inputClass = "w-full px-3 py-2 rounded-lg bg-white/50 border border-gray-200 text-medical-text text-sm focus:border-medical-primary focus:ring-2 focus:ring-blue-100 transition-all outline-none";
 
   return (
-    <AnimatedBackground>
+    <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
       <Navbar role="admin" userName="Administrator" />
       <div className="px-4 md:px-8 pb-8 max-w-7xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
@@ -93,12 +93,17 @@ export default function AdminAssignmentsPage() {
         </motion.div>
 
         {appointments.length === 0 ? (
-          <GlassCard><p className="text-center py-12 text-medical-text-secondary">No pending appointments to assign</p></GlassCard>
+          <div className="super-glass p-8 relative overflow-hidden group">
+  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+  <div className="relative z-10"><p className="text-center py-12 text-medical-text-secondary">No pending appointments to assign</p>  </div>
+</div>
         ) : (
           <div className="space-y-4">
             {appointments.map((apt, i) => (
               <motion.div key={apt._id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                <GlassCard>
+                <div className="super-glass p-8 relative overflow-hidden group">
+  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+  <div className="relative z-10">
                   <div className="flex flex-col lg:flex-row lg:items-center gap-4">
                     {/* Patient Info */}
                     <div className="flex-1">
@@ -139,7 +144,8 @@ export default function AdminAssignmentsPage() {
                       </button>
                     )}
                   </div>
-                </GlassCard>
+                  </div>
+</div>
               </motion.div>
             ))}
           </div>
