@@ -97,7 +97,7 @@ export default function BookAppointmentPage() {
 
   if (loading) {
     return (
-      <AnimatedBackground>
+      <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
         <LoadingSpinner text="Loading appointment form..." />
       </AnimatedBackground>
     );
@@ -107,7 +107,7 @@ export default function BookAppointmentPage() {
     "w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 text-medical-text placeholder-gray-400 focus:border-medical-primary focus:ring-2 focus:ring-blue-100 transition-all outline-none";
 
   return (
-    <AnimatedBackground>
+    <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
       <Navbar role="patient" userName={profile?.name} userIdentifier={profile?.patientId} />
 
       <div className="px-4 md:px-8 pb-8 max-w-4xl mx-auto">
@@ -116,7 +116,9 @@ export default function BookAppointmentPage() {
           <p className="text-medical-text-secondary mt-1">Fill in the details below to request an appointment</p>
         </motion.div>
 
-        <GlassCard>
+        <div className="super-glass p-8 relative overflow-hidden group">
+  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+  <div className="relative z-10">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Patient Name (fixed) */}
             <div>
@@ -229,7 +231,8 @@ export default function BookAppointmentPage() {
               {submitting ? "Submitting..." : "Submit Appointment Request"}
             </button>
           </form>
-        </GlassCard>
+          </div>
+</div>
       </div>
 
       <SuccessModal
