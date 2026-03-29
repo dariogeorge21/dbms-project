@@ -6,11 +6,27 @@ import { motion } from "framer-motion";
 interface AnimatedBackgroundProps {
   children: ReactNode;
   className?: string;
+  videoSrc?: string;
 }
 
-export default function AnimatedBackground({ children, className = "" }: AnimatedBackgroundProps) {
+export default function AnimatedBackground({ children, className = "", videoSrc }: AnimatedBackgroundProps) {
   return (
     <div className={`min-h-screen relative overflow-hidden bg-[#FAFAFA] z-0 ${className}`}>
+      {videoSrc && (
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover -z-20"
+        >
+          <source src={videoSrc} type="video/mp4" />
+        </video>
+      )}
+      
+      {/* White Shade Overlay over the Video */}
+      <div className="absolute inset-0 bg-white/70 pointer-events-none backdrop-blur-[2px] -z-10" />
+
       {/* Abstract Glossy Orbs */}
       <motion.div
         animate={{

@@ -41,25 +41,25 @@ export default function LandingPage() {
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#FAFAFA]"
+            className="fixed mt-4 inset-0 z-50 flex flex-col items-center justify-center bg-[#FAFAFA]"
           >
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
               className="w-24 h-24 rounded-full border-[3px] border-t-medical-primary border-r-medical-primary-light border-b-medical-success border-l-transparent shadow-[0_0_40px_rgba(0,123,255,0.4)]"
             />
-            <motion.div
+            {/* <motion.div
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 1.5, repeat: Infinity }}
               className="mt-8 text-xl font-medium text-gradient-glossy"
             >
               {loadingMsgs[msgIndex]}
-            </motion.div>
+            </motion.div> */}
           </motion.div>
         )}
       </AnimatePresence>
 
-      <AnimatedBackground>
+      <AnimatedBackground videoSrc="https://www.pexels.com/download/video/5203512/">
         <div className="min-h-screen flex flex-col">
           {/* Header */}
           <motion.header
@@ -94,7 +94,7 @@ export default function LandingPage() {
           </motion.header>
 
           {/* Hero Section */}
-          <div className="flex-1 flex items-center justify-center px-4 relative z-10">
+          <div className="flex-1 flex items-center justify-center px-4 relative z-10 pt-20">
             <div className="text-center max-w-4xl w-full">
               <motion.div
                 initial={{ opacity: 0, scale: 0.8, y: 30 }}
@@ -124,13 +124,13 @@ export default function LandingPage() {
                   />
                 </div> */} 
 
-                <h1 className="text-6xl md:text-7xl font-extrabold text-medical-text mb-6 leading-[1.1] tracking-tight">
+                <h1 className="text-4xl md:text-6xl font-extrabold text-medical-text mb-4 leading-[1.1] tracking-tight">
                   All India Institute of
                   <br />
                   <span className="text-gradient-glossy drop-shadow-sm">Medical Sciences</span>
                 </h1>
-                <p className="text-2xl font-medium text-medical-text-secondary/90 mb-6 tracking-wide">New Delhi</p>
-                <p className="text-xl text-medical-text-secondary/80 mb-14 max-w-2xl mx-auto leading-relaxed">
+                <p className="text-xl font-medium text-medical-text-secondary/90 mb-4 tracking-wide">New Delhi</p>
+                <p className="text-lg text-medical-text-secondary/80 mb-10 max-w-2xl mx-auto leading-relaxed">
                   Experience healthcare reimagined. Book your appointments seamlessly through our next-generation digital portal.
                 </p>
 
