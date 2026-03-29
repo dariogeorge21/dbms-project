@@ -1,112 +1,189 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import AnimatedBackground from "@/components/AnimatedBackground";
 
+const loadingMsgs = [
+  "Harmonizing Medical Records...",
+  "Calibrating Quantum Scanners...",
+  "Initializing Appointment Matrices...",
+  "Synthesizing Healthcare Data...",
+  "Preparing Your Wellness Journey...",
+];
+
 export default function LandingPage() {
+  const [loading, setLoading] = useState(true);
+  const [msgIndex, setMsgIndex] = useState(0);
+
+  useEffect(() => {
+    const msgInterval = setInterval(() => {
+      setMsgIndex((prev) => (prev + 1) % loadingMsgs.length);
+    }, 1200);
+
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3600);
+
+    return () => {
+      clearInterval(msgInterval);
+      clearTimeout(timer);
+    };
+  }, []);
+
   return (
-    <AnimatedBackground>
-      <div className="min-h-screen flex flex-col">
-        {/* Header */}
-        <motion.header
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="glass-card mx-4 mt-4 px-6 py-3 flex items-center justify-between"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-medical-primary to-medical-primary-light flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-lg">A</span>
-            </div>
-            <div>
-              <h1 className="font-bold text-medical-text text-lg leading-tight">AIIMS Delhi</h1>
-              <p className="text-xs text-medical-text-secondary">All India Institute of Medical Sciences</p>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <Link
-              href="/doctor/login"
-              className="px-4 py-2 rounded-xl text-sm font-medium text-medical-text-secondary hover:bg-blue-50 transition-all"
-            >
-              Doctor Portal
-            </Link>
-            <Link
-              href="/admin/login"
-              className="px-4 py-2 rounded-xl text-sm font-medium text-medical-text-secondary hover:bg-blue-50 transition-all"
-            >
-              Admin
-            </Link>
-          </div>
-        </motion.header>
-
-        {/* Hero Section */}
-        <div className="flex-1 flex items-center justify-center px-4">
-          <div className="text-center max-w-3xl">
+    <>
+      <AnimatePresence>
+        {loading && (
+          <motion.div
+            key="loader"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#FAFAFA]"
+          >
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+              className="w-24 h-24 rounded-full border-[3px] border-t-medical-primary border-r-medical-primary-light border-b-medical-success border-l-transparent shadow-[0_0_40px_rgba(0,123,255,0.4)]"
+            />
+            <motion.div
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              className="mt-8 text-xl font-medium text-gradient-glossy"
             >
-              {/* AIIMS Logo */}
-              <div className="mb-8">
-                <motion.div
-                  animate={{ boxShadow: ["0 0 40px rgba(0,123,255,0.1)", "0 0 80px rgba(0,123,255,0.2)", "0 0 40px rgba(0,123,255,0.1)"] }}
-                  transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-                  className="w-28 h-28 mx-auto rounded-3xl bg-gradient-to-br from-medical-primary to-medical-primary-light flex items-center justify-center shadow-2xl"
-                >
-                  <span className="text-white font-bold text-5xl">A</span>
-                </motion.div>
+              {loadingMsgs[msgIndex]}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatedBackground>
+        <div className="min-h-screen flex flex-col">
+          {/* Header */}
+          <motion.header
+            initial={{ y: -30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 3.8, duration: 0.8 }}
+            className="super-glass mx-4 mt-6 px-6 py-4 flex items-center justify-between shadow-[0_8px_32px_rgba(0,123,255,0.1)]"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-medical-primary to-medical-primary-light flex items-center justify-center shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),_0_8px_16px_rgba(0,123,255,0.3)] transform transition-transform hover:scale-105">
+                <span className="text-white font-bold text-xl drop-shadow-md">A</span>
               </div>
-
-              <h1 className="text-5xl md:text-6xl font-bold text-medical-text mb-4 leading-tight">
-                All India Institute of
-                <br />
-                <span className="text-gradient">Medical Sciences</span>
-              </h1>
-              <p className="text-xl text-medical-text-secondary mb-4">New Delhi</p>
-              <p className="text-lg text-medical-text-secondary mb-12 max-w-xl mx-auto">
-                Book your appointment seamlessly through our digital portal.
-                Quality healthcare at your fingertips.
-              </p>
-
-              {/* CTA Button */}
-              <Link href="/patient">
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="px-10 py-4 rounded-2xl bg-gradient-to-r from-medical-primary to-medical-primary-light text-white text-lg font-semibold btn-glow shadow-xl"
-                >
-                  Book Appointment
-                </motion.button>
+              <div>
+                <h1 className="font-extrabold text-medical-text text-xl leading-tight tracking-tight">AIIMS Delhi</h1>
+                <p className="text-sm font-medium text-medical-text-secondary/80">All India Institute of Medical Sciences</p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <Link
+                href="/doctor/login"
+                className="px-5 py-2.5 rounded-xl text-sm font-semibold text-medical-primary hover:bg-white/60 transition-all super-glass border-transparent hover:border-white/80"
+              >
+                Doctor Portal
               </Link>
-            </motion.div>
+              <Link
+                href="/admin/login"
+                className="px-5 py-2.5 rounded-xl text-sm font-semibold text-medical-text hover:bg-white/60 transition-all super-glass border-transparent hover:border-white/80"
+              >
+                Admin
+              </Link>
+            </div>
+          </motion.header>
 
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="mt-20 grid grid-cols-3 gap-6 max-w-lg mx-auto"
-            >
-              {[
-                { label: "Departments", value: "42+" },
-                { label: "Doctors", value: "500+" },
-                { label: "Daily Patients", value: "10K+" },
-              ].map((stat) => (
-                <div key={stat.label} className="glass-card p-4">
-                  <p className="text-2xl font-bold text-gradient">{stat.value}</p>
-                  <p className="text-xs text-medical-text-secondary mt-1">{stat.label}</p>
-                </div>
-              ))}
-            </motion.div>
+          {/* Hero Section */}
+          <div className="flex-1 flex items-center justify-center px-4 relative z-10">
+            <div className="text-center max-w-4xl w-full">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8, y: 30 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 4, duration: 1, type: "spring", bounce: 0.4 }}
+              >
+                {/* AIIMS Logo 3D */}
+                {/* <div className="mb-10 relative inline-block">
+                  <motion.div
+                    animate={{ 
+                      y: [-10, 10, -10],
+                      rotateX: [0, 5, -5, 0],
+                      rotateY: [0, -5, 5, 0]
+                    }}
+                    transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+                    style={{ transformPerspective: 1000 }}
+                    className="relative w-36 h-36 mx-auto rounded-[2rem] bg-gradient-to-br from-[#00E5FF] via-[#007BFF] to-[#0056b3] flex items-center justify-center shadow-[0_20px_50px_rgba(0,123,255,0.4),_inset_0_2px_10px_rgba(255,255,255,0.6),_inset_0_-5px_20px_rgba(0,0,0,0.2)]"
+                  >
+                    <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-tr from-transparent via-white/30 to-transparent pointer-events-none" />
+                    <span className="text-white font-extrabold text-7xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">A</span>
+                  </motion.div>
+                  {/* Floor Shadow */}
+                  {/* <motion.div 
+                    animate={{ scale: [1, 0.8, 1], opacity: [0.3, 0.1, 0.3] }}
+                    transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+                    className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-24 h-4 bg-black/20 rounded-[100%] blur-md"
+                  />
+                </div> */} 
+
+                <h1 className="text-6xl md:text-7xl font-extrabold text-medical-text mb-6 leading-[1.1] tracking-tight">
+                  All India Institute of
+                  <br />
+                  <span className="text-gradient-glossy drop-shadow-sm">Medical Sciences</span>
+                </h1>
+                <p className="text-2xl font-medium text-medical-text-secondary/90 mb-6 tracking-wide">New Delhi</p>
+                <p className="text-xl text-medical-text-secondary/80 mb-14 max-w-2xl mx-auto leading-relaxed">
+                  Experience healthcare reimagined. Book your appointments seamlessly through our next-generation digital portal.
+                </p>
+
+                {/* CTA Button */}
+                <Link href="/patient">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-12 py-5 rounded-[2rem] btn-super-glass text-xl font-bold tracking-wide relative group overflow-hidden"
+                  >
+                    <span className="relative z-10 text-medical-primary group-hover:text-[#0056b3] transition-colors">Book Appointment</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
+                  </motion.button>
+                </Link>
+              </motion.div>
+
+              {/* Stats */}
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 4.5, duration: 0.8 }}
+                className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto"
+              >
+                {[
+                  { label: "Specialized Departments", value: "42+" },
+                  { label: "Expert Doctors", value: "500+" },
+                  { label: "Daily Patients Treated", value: "10K+" },
+                ].map((stat, i) => (
+                  <motion.div 
+                    key={stat.label}
+                    whileHover={{ y: -8, scale: 1.02 }}
+                    className="super-glass p-8 relative overflow-hidden group"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <p className="text-4xl font-extrabold text-gradient-glossy mb-2 drop-shadow-sm">{stat.value}</p>
+                    <p className="text-sm font-semibold text-medical-text-secondary/70 uppercase tracking-widest">{stat.label}</p>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
           </div>
-        </div>
 
-        {/* Footer */}
-        <footer className="text-center py-6 text-sm text-medical-text-secondary">
-          © 2026 AIIMS Delhi — Appointment Booking Portal
-        </footer>
-      </div>
-    </AnimatedBackground>
+          {/* Footer */}
+          <motion.footer 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 5 }}
+            className="text-center py-8 text-sm font-medium text-medical-text-secondary/60 relative z-10"
+          >
+            © 2026 AIIMS Delhi — Next-Gen Appointment Portal
+          </motion.footer>
+        </div>
+      </AnimatedBackground>
+    </>
   );
 }

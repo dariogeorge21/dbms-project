@@ -151,6 +151,34 @@
     );
     animation: shimmer 3s ease-in-out infinite;
   }
+
+  /* Super glass styles */
+  .super-glass {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 2px 12px 0 rgba(255, 255, 255, 0.5);
+    border-radius: 1.5rem;
+  }
+  .btn-super-glass {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 248, 255, 0.8) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.1), inset 0 2px 4px rgba(255, 255, 255, 1);
+    backdrop-filter: blur(10px);
+    color: var(--medical-primary);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  .btn-super-glass:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.2), inset 0 2px 4px rgba(255, 255, 255, 1);
+  }
+  .text-gradient-glossy {
+    background: linear-gradient(135deg, #0056b3, #00E5FF, #10B981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }
 
 @layer utilities {
