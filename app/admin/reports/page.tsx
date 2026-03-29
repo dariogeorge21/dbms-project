@@ -47,7 +47,7 @@ export default function AdminReportsPage() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  if (loading) return <AnimatedBackground><LoadingSpinner /></AnimatedBackground>;
+  if (loading) return <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/"><LoadingSpinner /></AnimatedBackground>;
 
   const ov = analytics?.overview;
   const daily = analytics?.dailyAppointments || [];
@@ -56,7 +56,7 @@ export default function AdminReportsPage() {
   const maxDaily = Math.max(...daily.map((d) => d.count), 1);
 
   return (
-    <AnimatedBackground>
+    <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
       <Navbar role="admin" userName="Administrator" />
       <div className="px-4 md:px-8 pb-8 max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-6">
@@ -80,7 +80,9 @@ export default function AdminReportsPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {/* Daily Appointments Chart */}
-          <GlassCard>
+          <div className="super-glass p-8 relative overflow-hidden group">
+  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+  <div className="relative z-10">
             <h2 className="text-lg font-bold text-medical-text mb-4">Appointment Trends</h2>
             {daily.length === 0 ? (
               <p className="text-center py-8 text-medical-text-secondary">No data available</p>
@@ -102,10 +104,13 @@ export default function AdminReportsPage() {
                 ))}
               </div>
             )}
-          </GlassCard>
+            </div>
+</div>
 
           {/* Doctor Workload */}
-          <GlassCard>
+          <div className="super-glass p-8 relative overflow-hidden group">
+  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+  <div className="relative z-10">
             <h2 className="text-lg font-bold text-medical-text mb-4">Doctor Workload</h2>
             {docLoad.length === 0 ? (
               <p className="text-center py-8 text-medical-text-secondary">No data available</p>
@@ -131,11 +136,14 @@ export default function AdminReportsPage() {
                 ))}
               </div>
             )}
-          </GlassCard>
+            </div>
+</div>
         </div>
 
         {/* Patient Visits */}
-        <GlassCard>
+        <div className="super-glass p-8 relative overflow-hidden group">
+  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+  <div className="relative z-10">
           <h2 className="text-lg font-bold text-medical-text mb-4">Top Patients by Visits</h2>
           {patVisits.length === 0 ? (
             <p className="text-center py-8 text-medical-text-secondary">No data available</p>
@@ -163,7 +171,8 @@ export default function AdminReportsPage() {
               </table>
             </div>
           )}
-        </GlassCard>
+          </div>
+</div>
       </div>
     </AnimatedBackground>
   );
