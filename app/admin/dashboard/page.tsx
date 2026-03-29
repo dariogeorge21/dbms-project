@@ -43,13 +43,13 @@ export default function AdminDashboardPage() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  if (loading) return <AnimatedBackground><LoadingSpinner text="Loading dashboard..." /></AnimatedBackground>;
+  if (loading) return <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/"><LoadingSpinner text="Loading dashboard..." /></AnimatedBackground>;
 
   const ov = analytics?.overview;
   const statusData = analytics?.appointmentsByStatus || [];
 
   return (
-    <AnimatedBackground>
+    <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
       <Navbar role="admin" userName="Administrator" />
       <div className="px-4 md:px-8 pb-8 max-w-7xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
@@ -68,7 +68,9 @@ export default function AdminDashboardPage() {
         {/* Quick Access & Appointment Status */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Quick Access */}
-          <GlassCard>
+          <div className="super-glass p-8 relative overflow-hidden group">
+  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+  <div className="relative z-10">
             <h2 className="text-lg font-bold text-medical-text mb-4">Quick Access</h2>
             <div className="grid grid-cols-2 gap-3">
               {[
@@ -91,10 +93,13 @@ export default function AdminDashboardPage() {
                 </motion.button>
               ))}
             </div>
-          </GlassCard>
+            </div>
+</div>
 
           {/* Appointment Status */}
-          <GlassCard>
+          <div className="super-glass p-8 relative overflow-hidden group">
+  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+  <div className="relative z-10">
             <h2 className="text-lg font-bold text-medical-text mb-4">Appointment Overview</h2>
             <div className="space-y-3">
               {["requested", "assigned", "in_consultation", "completed", "cancelled"].map((status) => {
@@ -138,7 +143,8 @@ export default function AdminDashboardPage() {
                 <p className="text-xs text-medical-text-secondary mt-1">Total Doctors</p>
               </div>
             </div>
-          </GlassCard>
+            </div>
+</div>
         </div>
       </div>
     </AnimatedBackground>
