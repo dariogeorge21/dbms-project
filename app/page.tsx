@@ -175,12 +175,49 @@ export default function LandingPage() {
 
           {/* Footer */}
           <motion.footer 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 5 }}
-            className="text-center py-8 text-sm font-medium text-medical-text-secondary/60 relative z-10"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 5, duration: 0.8 }}
+            className="w-full relative z-10 mt-auto pt-24 pb-8 px-4"
           >
-            © 2026 AIIMS Delhi — Next-Gen Appointment Portal
+            <div className="max-w-6xl mx-auto super-glass p-8 md:p-12 mb-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+              <div className="md:col-span-2">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-medical-primary to-medical-primary-light flex items-center justify-center shadow-lg">
+                    <span className="text-white font-bold text-lg drop-shadow-md">A</span>
+                  </div>
+                  <div>
+                    <h2 className="font-extrabold text-medical-text text-lg leading-tight tracking-tight">AIIMS Delhi</h2>
+                    <p className="text-xs font-medium text-medical-text-secondary/80">All India Institute of Medical Sciences</p>
+                  </div>
+                </div>
+                <p className="text-sm text-medical-text-secondary/80 leading-relaxed max-w-sm">
+                  Revolutionizing healthcare accessibility with our next-generation digital appointment and management portal. Experience world-class medical services seamlessly.
+                </p>
+              </div>
+              
+              <div>
+                <h3 className="font-bold text-medical-text mb-4 text-gradient-glossy">Quick Links</h3>
+                <ul className="space-y-3">
+                  <li><Link href="/patient" className="text-sm text-medical-text-secondary/80 hover:text-medical-primary hover:translate-x-1 inline-block transition-all">Patient Portal</Link></li>
+                  <li><Link href="/doctor/login" className="text-sm text-medical-text-secondary/80 hover:text-medical-primary hover:translate-x-1 inline-block transition-all">Doctor Portal</Link></li>
+                  <li><Link href="/admin/login" className="text-sm text-medical-text-secondary/80 hover:text-medical-primary hover:translate-x-1 inline-block transition-all">Admin Dashboard</Link></li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-bold text-medical-text mb-4 text-gradient-glossy">Legal & Support</h3>
+                <ul className="space-y-3">
+                  <li><Link href="/faq" className="text-sm text-medical-text-secondary/80 hover:text-medical-primary hover:translate-x-1 inline-block transition-all">FAQ & Support</Link></li>
+                  <li><Link href="/privacy-policy" className="text-sm text-medical-text-secondary/80 hover:text-medical-primary hover:translate-x-1 inline-block transition-all">Privacy Policy</Link></li>
+                  <li><Link href="/terms-of-service" className="text-sm text-medical-text-secondary/80 hover:text-medical-primary hover:translate-x-1 inline-block transition-all">Terms of Service</Link></li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="text-center text-sm font-medium text-medical-text-secondary/60">
+              © {new Date().getFullYear()} AIIMS Delhi — Next-Gen Appointment Portal. All rights reserved.
+            </div>
           </motion.footer>
         </div>
       </AnimatedBackground>
