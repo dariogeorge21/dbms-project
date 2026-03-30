@@ -58,14 +58,16 @@ export async function POST(request: NextRequest) {
       password,
     } = body;
 
-    if (!name || !phone || !specialization || !department || !availabilityFrom || !availabilityTo || !password) {
+    if (!name || !email || !phone || !specialization || !department || !availabilityFrom || !availabilityTo || !password) {
       return NextResponse.json({ error: "All fields are required" }, { status: 400 });
     }
+
+    const normalizedEmail = String(email).toLowerCase().trim();
 
     // Check duplicate phone/email
     const existing = await User.findOne({
       $or: [
-        ...(email ? [{ email: email.toLowerCase() }] : []),
+        { email: normalizedEmail },
         { phone },
       ],
     });
@@ -78,7 +80,7 @@ export async function POST(request: NextRequest) {
     // Create user
     const user = await User.create({
       role: "doctor",
-      email: email?.toLowerCase() || `doc_${phone}@aiims.internal`,
+      email: normalizedEmail,
       phone,
       passwordHash,
       isActive: true,

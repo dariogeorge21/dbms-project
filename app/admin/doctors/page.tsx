@@ -13,6 +13,7 @@ interface DoctorItem {
   _id: string;
   doctorId: string;
   name: string;
+  email?: string;
   phone: string;
   age: number;
   sex: string;
@@ -32,13 +33,14 @@ export default function AdminDoctorsPage() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
+  const [formError, setFormError] = useState("");
   const [selectedDoctor, setSelectedDoctor] = useState<DoctorItem | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   const [form, setForm] = useState({
     name: "", email: "", phone: "", age: "", sex: "male",
     specialization: "", department: "", availabilityFrom: "09:00",
-    availabilityTo: "17:00", password: "",
+    availabilityTo: "17:00", password: "", isActive: true,
   });
 
   const fetchDoctors = useCallback(async () => {
@@ -58,22 +60,67 @@ export default function AdminDoctorsPage() {
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError("");
     setSubmitting(true);
     try {
-      const res = await fetch("/api/doctors", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
-      if (res.ok) { setSuccessMsg("Doctor created successfully!"); setShowSuccess(true); setShowCreate(false); resetForm(); fetchDoctors(); }
-    } catch { /* handle */ }
+      const payload = {
+        ...form,
+        email: form.email.trim(),
+        age: form.age ? Number(form.age) : undefined,
+      };
+      const res = await fetch("/api/doctors", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+      const data = await res.json();
+      if (res.ok) {
+        setSuccessMsg("Doctor created successfully!");
+        setShowSuccess(true);
+        setShowCreate(false);
+        resetForm();
+        fetchDoctors();
+      } else {
+        setFormError(data.error || "Unable to create doctor.");
+      }
+    } catch {
+      setFormError("Unable to create doctor.");
+    }
     finally { setSubmitting(false); }
   };
 
   const handleEdit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedDoctor) return;
+    setFormError("");
     setSubmitting(true);
     try {
-      const res = await fetch(`/api/doctors/${selectedDoctor._id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
-      if (res.ok) { setSuccessMsg("Doctor updated!"); setShowSuccess(true); setShowEdit(false); fetchDoctors(); }
-    } catch { /* handle */ }
+      const payload: Record<string, unknown> = {
+        name: form.name,
+        email: form.email.trim(),
+        phone: form.phone,
+        age: form.age ? Number(form.age) : undefined,
+        sex: form.sex,
+        specialization: form.specialization,
+        department: form.department,
+        availabilityFrom: form.availabilityFrom,
+        availabilityTo: form.availabilityTo,
+        isActive: form.isActive,
+      };
+
+      if (form.password.trim()) {
+        payload.password = form.password;
+      }
+
+      const res = await fetch(`/api/doctors/${selectedDoctor._id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+      const data = await res.json();
+      if (res.ok) {
+        setSuccessMsg("Doctor updated!");
+        setShowSuccess(true);
+        setShowEdit(false);
+        fetchDoctors();
+      } else {
+        setFormError(data.error || "Unable to update doctor.");
+      }
+    } catch {
+      setFormError("Unable to update doctor.");
+    }
     finally { setSubmitting(false); }
   };
 
@@ -85,11 +132,32 @@ export default function AdminDoctorsPage() {
     } catch { /* handle */ }
   };
 
-  const resetForm = () => setForm({ name: "", email: "", phone: "", age: "", sex: "male", specialization: "", department: "", availabilityFrom: "09:00", availabilityTo: "17:00", password: "" });
+  const resetForm = () => setForm({ name: "", email: "", phone: "", age: "", sex: "male", specialization: "", department: "", availabilityFrom: "09:00", availabilityTo: "17:00", password: "", isActive: true });
 
-  const openEdit = (doc: DoctorItem) => {
+  const openEdit = async (doc: DoctorItem) => {
     setSelectedDoctor(doc);
-    setForm({ name: doc.name, email: "", phone: doc.phone, age: String(doc.age), sex: doc.sex, specialization: doc.specialization, department: doc.department, availabilityFrom: doc.availabilityHours.from, availabilityTo: doc.availabilityHours.to, password: "" });
+    setFormError("");
+    try {
+      const res = await fetch(`/api/doctors/${doc._id}`);
+      const data = await res.json();
+      const doctorEmail = res.ok ? (data.doctor?.email || "") : "";
+      setForm({
+        name: doc.name,
+        email: doctorEmail,
+        phone: doc.phone,
+        age: String(doc.age),
+        sex: doc.sex,
+        specialization: doc.specialization,
+        department: doc.department,
+        availabilityFrom: doc.availabilityHours.from,
+        availabilityTo: doc.availabilityHours.to,
+        password: "",
+        isActive: doc.isActive,
+      });
+    } catch {
+      setForm({ name: doc.name, email: "", phone: doc.phone, age: String(doc.age), sex: doc.sex, specialization: doc.specialization, department: doc.department, availabilityFrom: doc.availabilityHours.from, availabilityTo: doc.availabilityHours.to, password: "", isActive: doc.isActive });
+      setFormError("Could not load doctor credentials. You can still update profile fields.");
+    }
     setShowEdit(true);
   };
 
@@ -150,10 +218,11 @@ export default function AdminDoctorsPage() {
       {/* Create Modal */}
       <Modal isOpen={showCreate} onClose={() => setShowCreate(false)} title="Add New Doctor">
         <form onSubmit={handleCreate} className="space-y-3">
+          <p className="text-xs text-medical-text-secondary">These email and password credentials will be shared with the doctor for portal login.</p>
           <div className="grid grid-cols-2 gap-3">
             <div><label className="text-xs font-medium text-medical-text">Name</label><input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputClass} /></div>
             <div><label className="text-xs font-medium text-medical-text">Phone</label><input required value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className={inputClass} /></div>
-            <div><label className="text-xs font-medium text-medical-text">Email</label><input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={inputClass} /></div>
+            <div><label className="text-xs font-medium text-medical-text">Login Email</label><input required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={inputClass} /></div>
             <div><label className="text-xs font-medium text-medical-text">Password</label><input required type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className={inputClass} /></div>
             <div><label className="text-xs font-medium text-medical-text">Age</label><input type="number" value={form.age} onChange={(e) => setForm({ ...form, age: e.target.value })} className={inputClass} /></div>
             <div><label className="text-xs font-medium text-medical-text">Sex</label><select value={form.sex} onChange={(e) => setForm({ ...form, sex: e.target.value })} className={inputClass}><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option></select></div>
@@ -162,6 +231,7 @@ export default function AdminDoctorsPage() {
             <div><label className="text-xs font-medium text-medical-text">From</label><input required type="time" value={form.availabilityFrom} onChange={(e) => setForm({ ...form, availabilityFrom: e.target.value })} className={inputClass} /></div>
             <div><label className="text-xs font-medium text-medical-text">To</label><input required type="time" value={form.availabilityTo} onChange={(e) => setForm({ ...form, availabilityTo: e.target.value })} className={inputClass} /></div>
           </div>
+          {formError && <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{formError}</p>}
           <button type="submit" disabled={submitting} className="w-full py-2 rounded-xl bg-medical-primary text-white font-medium text-sm disabled:opacity-50">{submitting ? "Creating..." : "Create Doctor"}</button>
         </form>
       </Modal>
@@ -169,16 +239,20 @@ export default function AdminDoctorsPage() {
       {/* Edit Modal */}
       <Modal isOpen={showEdit} onClose={() => setShowEdit(false)} title="Edit Doctor">
         <form onSubmit={handleEdit} className="space-y-3">
+          <p className="text-xs text-medical-text-secondary">Update doctor login email, and set a new password only when reset is needed.</p>
           <div className="grid grid-cols-2 gap-3">
             <div><label className="text-xs font-medium text-medical-text">Name</label><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputClass} /></div>
             <div><label className="text-xs font-medium text-medical-text">Phone</label><input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className={inputClass} /></div>
+            <div><label className="text-xs font-medium text-medical-text">Login Email</label><input required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={inputClass} /></div>
+            <div><label className="text-xs font-medium text-medical-text">Reset Password (Optional)</label><input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className={inputClass} placeholder="Leave blank to keep current password" /></div>
             <div><label className="text-xs font-medium text-medical-text">Age</label><input type="number" value={form.age} onChange={(e) => setForm({ ...form, age: e.target.value })} className={inputClass} /></div>
             <div><label className="text-xs font-medium text-medical-text">Specialization</label><input value={form.specialization} onChange={(e) => setForm({ ...form, specialization: e.target.value })} className={inputClass} /></div>
             <div><label className="text-xs font-medium text-medical-text">Department</label><input value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} className={inputClass} /></div>
             <div><label className="text-xs font-medium text-medical-text">From</label><input type="time" value={form.availabilityFrom} onChange={(e) => setForm({ ...form, availabilityFrom: e.target.value })} className={inputClass} /></div>
             <div><label className="text-xs font-medium text-medical-text">To</label><input type="time" value={form.availabilityTo} onChange={(e) => setForm({ ...form, availabilityTo: e.target.value })} className={inputClass} /></div>
-            <div><label className="text-xs font-medium text-medical-text">Status</label><select value={selectedDoctor?.isActive ? "true" : "false"} onChange={(e) => setForm({ ...form })} className={inputClass}><option value="true">Active</option><option value="false">Inactive</option></select></div>
+            <div><label className="text-xs font-medium text-medical-text">Status</label><select value={form.isActive ? "true" : "false"} onChange={(e) => setForm({ ...form, isActive: e.target.value === "true" })} className={inputClass}><option value="true">Active</option><option value="false">Inactive</option></select></div>
           </div>
+          {formError && <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{formError}</p>}
           <button type="submit" disabled={submitting} className="w-full py-2 rounded-xl bg-medical-primary text-white font-medium text-sm disabled:opacity-50">{submitting ? "Saving..." : "Save Changes"}</button>
         </form>
       </Modal>
