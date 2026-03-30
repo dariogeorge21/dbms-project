@@ -59,7 +59,7 @@ export default function LandingPage() {
         )}
       </AnimatePresence>
 
-      <AnimatedBackground videoSrc="https://www.pexels.com/download/video/5203512/">
+      <AnimatedBackground videoSrc="https://www.pexels.com/download/video/32470980/">
         <div className="min-h-screen flex flex-col">
           {/* Header */}
           <motion.header
