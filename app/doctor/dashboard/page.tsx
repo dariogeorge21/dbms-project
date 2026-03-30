@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import Navbar from "@/components/Navbar";
-import GlassCard from "@/components/GlassCard";
 import StatCard from "@/components/StatCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { CalendarDays, CheckCircle2, ClipboardList, Users } from "lucide-react";
 
 interface DoctorProfile {
   _id: string;
@@ -93,10 +93,10 @@ export default function DoctorDashboardPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <StatCard label="Total Patients" value={appointments.length} icon="👥" color="from-blue-500 to-cyan-400" />
-          <StatCard label="Assigned" value={assigned} icon="📋" color="from-amber-500 to-orange-400" delay={0.1} />
-          <StatCard label="Completed" value={completed} icon="✅" color="from-emerald-500 to-green-400" delay={0.2} />
-          <StatCard label="Today" value={appointments.filter((a) => a.appointmentDate && new Date(a.appointmentDate).toDateString() === new Date().toDateString()).length} icon="📅" color="from-purple-500 to-pink-400" delay={0.3} />
+          <StatCard label="Total Patients" value={appointments.length} icon={<Users className="w-6 h-6" />} color="from-blue-500 to-cyan-400" />
+          <StatCard label="Assigned" value={assigned} icon={<ClipboardList className="w-6 h-6" />} color="from-amber-500 to-orange-400" delay={0.1} />
+          <StatCard label="Completed" value={completed} icon={<CheckCircle2 className="w-6 h-6" />} color="from-emerald-500 to-green-400" delay={0.2} />
+          <StatCard label="Today" value={appointments.filter((a) => a.appointmentDate && new Date(a.appointmentDate).toDateString() === new Date().toDateString()).length} icon={<CalendarDays className="w-6 h-6" />} color="from-purple-500 to-pink-400" delay={0.3} />
         </div>
 
         {/* Appointment List */}
