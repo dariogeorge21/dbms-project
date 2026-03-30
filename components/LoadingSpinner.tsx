@@ -19,7 +19,7 @@ export default function LoadingSpinner({ text }: { text?: string }) {
       setRandomText(loadingTexts[Math.floor(Math.random() * loadingTexts.length)]);
       const interval = setInterval(() => {
         setRandomText(loadingTexts[Math.floor(Math.random() * loadingTexts.length)]);
-      }, 2500);
+      }, 1500);
       return () => clearInterval(interval);
     } else {
       setRandomText(text);
@@ -42,9 +42,13 @@ export default function LoadingSpinner({ text }: { text?: string }) {
         <motion.div
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ repeat: Infinity, duration: 1.5 }}
-          className="w-12 h-12 bg-gradient-to-br from-medical-primary to-teal-400 rounded-xl shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),_0_8px_16px_rgba(16,185,129,0.3)] flex items-center justify-center"
+          className="w-12 h-12 flex items-center justify-center"
         >
-          <span className="text-white font-extrabold text-xl drop-shadow-md">A</span>
+          <img 
+            src="https://upload.wikimedia.org/wikipedia/en/8/85/All_India_Institute_of_Medical_Sciences%2C_Delhi.svg" 
+            alt="AIIMS Logo" 
+            className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]"
+          />
         </motion.div>
       </div>
       <motion.p
