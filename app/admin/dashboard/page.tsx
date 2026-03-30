@@ -6,8 +6,8 @@ import { motion } from "framer-motion";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import Navbar from "@/components/Navbar";
 import StatCard from "@/components/StatCard";
-import GlassCard from "@/components/GlassCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { ChartColumn, ClipboardList, Mail, Pin, Stethoscope, Users } from "lucide-react";
 
 interface Analytics {
   overview: {
@@ -59,10 +59,10 @@ export default function AdminDashboardPage() {
 
         {/* Overview Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <StatCard label="Total Patients" value={ov?.totalPatients || 0} icon="👥" color="from-blue-500 to-cyan-400" />
-          <StatCard label="Active Doctors" value={ov?.activeDoctors || 0} icon="🩺" color="from-emerald-500 to-green-400" delay={0.1} />
-          <StatCard label="Appointments" value={ov?.totalAppointments || 0} icon="📋" color="from-amber-500 to-orange-400" delay={0.2} />
-          <StatCard label="New Messages" value={ov?.newMessages || 0} icon="✉️" color="from-purple-500 to-pink-400" delay={0.3} />
+          <StatCard label="Total Patients" value={ov?.totalPatients || 0} icon={<Users className="w-6 h-6" />} color="from-blue-500 to-cyan-400" />
+          <StatCard label="Active Doctors" value={ov?.activeDoctors || 0} icon={<Stethoscope className="w-6 h-6" />} color="from-emerald-500 to-green-400" delay={0.1} />
+          <StatCard label="Appointments" value={ov?.totalAppointments || 0} icon={<ClipboardList className="w-6 h-6" />} color="from-amber-500 to-orange-400" delay={0.2} />
+          <StatCard label="New Messages" value={ov?.newMessages || 0} icon={<Mail className="w-6 h-6" />} color="from-purple-500 to-pink-400" delay={0.3} />
         </div>
 
         {/* Quick Access & Appointment Status */}
@@ -74,12 +74,12 @@ export default function AdminDashboardPage() {
             <h2 className="text-lg font-bold text-medical-text mb-4">Quick Access</h2>
             <div className="grid grid-cols-2 gap-3">
               {[
-                { label: "Manage Doctors", href: "/admin/doctors", icon: "🩺", color: "bg-emerald-50 hover:bg-emerald-100" },
-                { label: "Manage Patients", href: "/admin/patients", icon: "👥", color: "bg-blue-50 hover:bg-blue-100" },
-                { label: "Assign Appointments", href: "/admin/assignments", icon: "📌", color: "bg-amber-50 hover:bg-amber-100" },
-                { label: "View Appointments", href: "/admin/appointments", icon: "📋", color: "bg-purple-50 hover:bg-purple-100" },
-                { label: "Reports & Analytics", href: "/admin/reports", icon: "📊", color: "bg-pink-50 hover:bg-pink-100" },
-                { label: "Messages", href: "/admin/messages", icon: "✉️", color: "bg-indigo-50 hover:bg-indigo-100" },
+                { label: "Manage Doctors", href: "/admin/doctors", icon: Stethoscope, color: "bg-emerald-50 hover:bg-emerald-100" },
+                { label: "Manage Patients", href: "/admin/patients", icon: Users, color: "bg-blue-50 hover:bg-blue-100" },
+                { label: "Assign Appointments", href: "/admin/assignments", icon: Pin, color: "bg-amber-50 hover:bg-amber-100" },
+                { label: "View Appointments", href: "/admin/appointments", icon: ClipboardList, color: "bg-purple-50 hover:bg-purple-100" },
+                { label: "Reports & Analytics", href: "/admin/reports", icon: ChartColumn, color: "bg-pink-50 hover:bg-pink-100" },
+                { label: "Messages", href: "/admin/messages", icon: Mail, color: "bg-indigo-50 hover:bg-indigo-100" },
               ].map((item) => (
                 <motion.button
                   key={item.href}
@@ -88,7 +88,7 @@ export default function AdminDashboardPage() {
                   onClick={() => router.push(item.href)}
                   className={`p-4 rounded-xl ${item.color} transition-colors text-left`}
                 >
-                  <span className="text-2xl mb-2 block">{item.icon}</span>
+                  <item.icon className="w-6 h-6 mb-2 text-medical-text" />
                   <span className="text-sm font-medium text-medical-text">{item.label}</span>
                 </motion.button>
               ))}

@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import Navbar from "@/components/Navbar";
-import GlassCard from "@/components/GlassCard";
 import StatCard from "@/components/StatCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { ClipboardList, Pill, Stethoscope, Users } from "lucide-react";
 
 interface Analytics {
   overview: {
@@ -72,10 +72,10 @@ export default function AdminReportsPage() {
 
         {/* Summary Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <StatCard label="Total Patients" value={ov?.totalPatients || 0} icon="👥" color="from-blue-500 to-cyan-400" />
-          <StatCard label="Active Doctors" value={ov?.activeDoctors || 0} icon="🩺" color="from-emerald-500 to-green-400" delay={0.1} />
-          <StatCard label="Appointments" value={ov?.totalAppointments || 0} icon="📋" color="from-amber-500 to-orange-400" delay={0.2} />
-          <StatCard label="Consultations" value={ov?.totalConsultations || 0} icon="💊" color="from-purple-500 to-pink-400" delay={0.3} />
+          <StatCard label="Total Patients" value={ov?.totalPatients || 0} icon={<Users className="w-6 h-6" />} color="from-blue-500 to-cyan-400" />
+          <StatCard label="Active Doctors" value={ov?.activeDoctors || 0} icon={<Stethoscope className="w-6 h-6" />} color="from-emerald-500 to-green-400" delay={0.1} />
+          <StatCard label="Appointments" value={ov?.totalAppointments || 0} icon={<ClipboardList className="w-6 h-6" />} color="from-amber-500 to-orange-400" delay={0.2} />
+          <StatCard label="Consultations" value={ov?.totalConsultations || 0} icon={<Pill className="w-6 h-6" />} color="from-purple-500 to-pink-400" delay={0.3} />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">

@@ -8,6 +8,7 @@ import Navbar from "@/components/Navbar";
 import GlassCard from "@/components/GlassCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Modal, { SuccessModal, DeleteConfirmModal } from "@/components/Modal";
+import { Stethoscope } from "lucide-react";
 
 interface DoctorItem {
   _id: string;
@@ -189,7 +190,9 @@ export default function AdminDoctorsPage() {
               <GlassCard className="h-full">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-lg">🩺</div>
+                    <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+                      <Stethoscope className="w-5 h-5 text-emerald-700" />
+                    </div>
                     <div>
                       <h3 className="font-bold text-medical-text text-sm">{doc.name}</h3>
                       <p className="text-xs text-medical-text-secondary">{doc.doctorId}</p>
