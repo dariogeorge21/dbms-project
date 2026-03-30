@@ -71,7 +71,7 @@ export default function PatientMessagesPage() {
     finally { setSubmitting(false); }
   };
 
-  if (loading) return <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/"><LoadingSpinner /></AnimatedBackground>;
+  if (loading) return <AnimatedBackground><LoadingSpinner /></AnimatedBackground>;
 
   const inputClass =
     "w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 text-medical-text placeholder-gray-400 focus:border-medical-primary focus:ring-2 focus:ring-blue-100 transition-all outline-none";
@@ -83,7 +83,7 @@ export default function PatientMessagesPage() {
   };
 
   return (
-    <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
+    <AnimatedBackground>
       <Navbar role="patient" userName={profile?.name} userIdentifier={profile?.patientId} />
       <div className="px-4 md:px-8 pb-8 max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-8">

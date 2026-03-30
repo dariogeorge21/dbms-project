@@ -48,7 +48,7 @@ export default function AdminMessagesPage() {
     fetchData();
   };
 
-  if (loading) return <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/"><LoadingSpinner /></AnimatedBackground>;
+  if (loading) return <AnimatedBackground><LoadingSpinner /></AnimatedBackground>;
 
   const statusColor: Record<string, string> = {
     new: "bg-blue-50 text-blue-700",
@@ -59,7 +59,7 @@ export default function AdminMessagesPage() {
   const inputClass = "px-3 py-2 rounded-lg bg-white/50 border border-gray-200 text-sm text-medical-text outline-none";
 
   return (
-    <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
+    <AnimatedBackground>
       <Navbar role="admin" userName="Administrator" />
       <div className="px-4 md:px-8 pb-8 max-w-5xl mx-auto">
         <div className="flex items-center justify-between mb-6">

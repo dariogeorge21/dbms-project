@@ -66,7 +66,7 @@ export default function PatientSignupPage() {
     "w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 text-medical-text placeholder-gray-400 focus:border-medical-primary focus:ring-2 focus:ring-blue-100 transition-all outline-none";
 
   return (
-    <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
+    <AnimatedBackground>
       <div className="min-h-screen flex items-center justify-center px-4 py-8">
         <div className="w-full max-w-lg">
           <motion.div

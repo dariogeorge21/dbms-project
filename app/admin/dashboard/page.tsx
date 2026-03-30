@@ -43,13 +43,13 @@ export default function AdminDashboardPage() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  if (loading) return <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/"><LoadingSpinner text="Loading dashboard..." /></AnimatedBackground>;
+  if (loading) return <AnimatedBackground><LoadingSpinner text="Loading dashboard..." /></AnimatedBackground>;
 
   const ov = analytics?.overview;
   const statusData = analytics?.appointmentsByStatus || [];
 
   return (
-    <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
+    <AnimatedBackground>
       <Navbar role="admin" userName="Administrator" />
       <div className="px-4 md:px-8 pb-8 max-w-7xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">

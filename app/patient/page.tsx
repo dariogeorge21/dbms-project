@@ -9,7 +9,7 @@ export default function PatientChoicePage() {
   const router = useRouter();
 
   return (
-    <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
+    <AnimatedBackground>
       <div className="min-h-screen flex items-center justify-center px-4 relative z-10">
         <div className="w-full max-w-3xl">
           <motion.div

@@ -124,13 +124,13 @@ export default function ConsultationPage() {
     }
   };
 
-  if (loading) return <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/"><LoadingSpinner text="Loading consultation..." /></AnimatedBackground>;
+  if (loading) return <AnimatedBackground><LoadingSpinner text="Loading consultation..." /></AnimatedBackground>;
 
   const apt = appointment as Record<string, unknown>;
   const inputClass = "w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 text-medical-text placeholder-gray-400 focus:border-medical-primary focus:ring-2 focus:ring-blue-100 transition-all outline-none";
 
   return (
-    <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
+    <AnimatedBackground>
       <Navbar role="doctor" userName={profile?.name} userIdentifier={profile?.doctorId} />
 
       <div className="px-4 md:px-8 pb-8 max-w-5xl mx-auto">

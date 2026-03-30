@@ -56,12 +56,12 @@ export default function AdminAppointmentsPage() {
     return colors[status] || "bg-gray-50 text-gray-700";
   };
 
-  if (loading) return <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/"><LoadingSpinner /></AnimatedBackground>;
+  if (loading) return <AnimatedBackground><LoadingSpinner /></AnimatedBackground>;
 
   const inputClass = "px-3 py-2 rounded-lg bg-white/50 border border-gray-200 text-medical-text text-sm focus:border-medical-primary outline-none";
 
   return (
-    <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
+    <AnimatedBackground>
       <Navbar role="admin" userName="Administrator" />
       <div className="px-4 md:px-8 pb-8 max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-6">

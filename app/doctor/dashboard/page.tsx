@@ -74,13 +74,13 @@ export default function DoctorDashboardPage() {
     return colors[status] || "bg-gray-50 text-gray-700";
   };
 
-  if (loading) return <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/"><LoadingSpinner text="Loading dashboard..." /></AnimatedBackground>;
+  if (loading) return <AnimatedBackground><LoadingSpinner text="Loading dashboard..." /></AnimatedBackground>;
 
   const assigned = appointments.filter((a) => a.status === "assigned").length;
   const completed = appointments.filter((a) => a.status === "completed").length;
 
   return (
-    <AnimatedBackground videoSrc="https://www.pexels.com/download/video/36718656/">
+    <AnimatedBackground>
       <Navbar role="doctor" userName={profile?.name} userIdentifier={profile?.doctorId} />
 
       <div className="px-4 md:px-8 pb-8 max-w-6xl mx-auto">
