@@ -1,7 +1,8 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { getRandomBackgroundVideo } from "@/lib/backgroundVideos";
 
 interface AnimatedBackgroundProps {
   children: ReactNode;
@@ -10,9 +11,19 @@ interface AnimatedBackgroundProps {
 }
 
 export default function AnimatedBackground({ children, className = "", videoSrc }: AnimatedBackgroundProps) {
+  const [randomVideoSrc, setRandomVideoSrc] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!videoSrc) {
+      setRandomVideoSrc(getRandomBackgroundVideo());
+    }
+  }, [videoSrc]);
+
+  const resolvedVideoSrc = videoSrc ?? randomVideoSrc;
+
   return (
     <div className={`min-h-screen relative overflow-hidden bg-[#FAFAFA] z-0 ${className}`}>
-      {videoSrc && (
+      {resolvedVideoSrc && (
         <video
           autoPlay
           loop
@@ -20,7 +31,7 @@ export default function AnimatedBackground({ children, className = "", videoSrc 
           playsInline
           className="absolute inset-0 w-full h-full object-cover -z-20"
         >
-          <source src={videoSrc} type="video/mp4" />
+          <source src={resolvedVideoSrc} type="video/mp4" />
         </video>
       )}
       
