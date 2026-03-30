@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import AnimatedBackground from "@/components/AnimatedBackground";
+import { UserCheck, UserPlus, ArrowLeft } from "lucide-react";
 
 export default function PatientChoicePage() {
   const router = useRouter();
@@ -17,8 +18,12 @@ export default function PatientChoicePage() {
             transition={{ duration: 0.6, type: "spring", bounce: 0.4 }}
             className="text-center mb-12"
           >
-            <div className="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-br from-medical-primary to-teal-400 flex items-center justify-center shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),_0_8px_16px_rgba(0,123,255,0.3)] mb-6">
-              <span className="text-white font-extrabold text-4xl drop-shadow-md">A</span>
+            <div className="h-24 w-24 mx-auto mb-4 relative">
+              <img 
+                  src="https://upload.wikimedia.org/wikipedia/en/8/85/All_India_Institute_of_Medical_Sciences%2C_Delhi.svg" 
+                  alt="AIIMS Logo" 
+                  className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]"
+                />
             </div>
             <h1 className="text-3xl md:text-5xl font-extrabold text-medical-text mb-4 drop-shadow-sm tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-medical-text to-medical-primary">Welcome to AIIMS Delhi</h1>
             <p className="text-medical-text-secondary/90 text-lg md:text-xl font-medium">Please select an option to continue</p>
@@ -29,46 +34,58 @@ export default function PatientChoicePage() {
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
-              whileHover={{ scale: 1.05, rotateY: 5, rotateX: 5 }}
+              whileHover={{ scale: 1.05, y: -5 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => router.push("/patient/login")}
-              className="super-glass p-8 relative overflow-hidden group cursor-pointer transition-all duration-300 rounded-3xl"
+              className="super-glass p-8 relative overflow-hidden group cursor-pointer transition-all duration-500 rounded-3xl border border-white/5 hover:border-blue-500/30 shadow-lg hover:shadow-blue-500/20"
             >
-              <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-              <div className="text-center py-6 relative z-10">
-                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center mb-6 shadow-inner group-hover:shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),_0_8px_16px_rgba(0,123,255,0.2)] transition-shadow duration-300">
-                  <span className="text-5xl drop-shadow-sm group-hover:scale-110 transition-transform duration-300">�</span>
+              {/* Animated Glow Overlay on Hover/Click */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-400/0 via-transparent to-blue-600/0 group-hover:from-blue-400/10 group-hover:to-blue-600/5 group-active:from-blue-400/30 group-active:via-blue-500/10 group-active:to-transparent opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-all duration-500 pointer-events-none" />
+              
+              {/* Corner Glow Effects on Click */}
+              <div className="absolute -top-12 -left-12 w-32 h-32 bg-blue-400 opacity-0 group-active:opacity-40 rounded-full blur-3xl transition-opacity duration-300 pointer-events-none" />
+              <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-blue-600 opacity-0 group-hover:opacity-20 group-active:opacity-40 rounded-full blur-3xl transition-opacity duration-300 pointer-events-none" />
+              
+              <div className="text-center py-6 relative z-10 flex flex-col items-center">
+                <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-blue-500/20 transition-all duration-300 shadow-inner">
+                  <UserCheck className="w-8 h-8 text-blue-500" />
                 </div>
-                <h2 className="text-2xl font-extrabold text-medical-text mb-3">Existing Patient</h2>
+                <h2 className="text-2xl font-extrabold text-medical-text mb-3 tracking-tight">Existing Patient</h2>
                 <p className="text-medical-text-secondary/90 font-medium text-base">
                   I already have a Patient ID.
                   <br />
                   Log in to your account.
                 </p>
               </div>
-              <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-blue-400 opacity-10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
-              whileHover={{ scale: 1.05, rotateY: -5, rotateX: 5 }}
+              whileHover={{ scale: 1.05, y: -5 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => router.push("/patient/signup")}
-              className="super-glass p-8 relative overflow-hidden group cursor-pointer transition-all duration-300 rounded-3xl"
+              className="super-glass p-8 relative overflow-hidden group cursor-pointer transition-all duration-500 rounded-3xl border border-white/5 hover:border-emerald-500/30 shadow-lg hover:shadow-emerald-500/20"
             >
-              <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-              <div className="text-center py-6 relative z-10">
-                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-emerald-100 to-emerald-50 flex items-center justify-center mb-6 shadow-inner group-hover:shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),_0_8px_16px_rgba(16,185,129,0.2)] transition-shadow duration-300">
-                  <span className="text-5xl drop-shadow-sm group-hover:scale-110 transition-transform duration-300">✨</span>
+              {/* Animated Glow Overlay on Hover/Click */}
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/0 via-transparent to-emerald-600/0 group-hover:from-emerald-400/10 group-hover:to-emerald-600/5 group-active:from-emerald-400/30 group-active:via-emerald-500/10 group-active:to-transparent opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-all duration-500 pointer-events-none" />
+              
+              {/* Corner Glow Effects on Click */}
+              <div className="absolute -top-12 -left-12 w-32 h-32 bg-emerald-400 opacity-0 group-active:opacity-40 rounded-full blur-3xl transition-opacity duration-300 pointer-events-none" />
+              <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-emerald-600 opacity-0 group-hover:opacity-20 group-active:opacity-40 rounded-full blur-3xl transition-opacity duration-300 pointer-events-none" />
+              
+              <div className="text-center py-6 relative z-10 flex flex-col items-center">
+                <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-emerald-500/20 transition-all duration-300 shadow-inner">
+                  <UserPlus className="w-8 h-8 text-emerald-500" />
                 </div>
-                <h2 className="text-2xl font-extrabold text-medical-text mb-3">New Patient</h2>
+                <h2 className="text-2xl font-extrabold text-medical-text mb-3 tracking-tight">New Patient</h2>
                 <p className="text-medical-text-secondary/90 font-medium text-base">
                   I&apos;m visiting for the first time.
                   <br />
                   Create a new account.
                 </p>
               </div>
-              <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-emerald-400 opacity-10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
             </motion.div>
           </div>
 
@@ -80,9 +97,10 @@ export default function PatientChoicePage() {
           >
             <button
               onClick={() => router.push("/")}
-              className="text-sm font-bold text-medical-text-secondary/80 hover:text-medical-primary transition-colors hover:-translate-x-1 inline-block transform duration-200"
+              className="group flex items-center justify-center mx-auto space-x-2 text-sm font-bold text-medical-text-secondary/80 hover:text-medical-primary transition-colors duration-200 py-2 px-6 rounded-full hover:bg-white/5 active:bg-white/10"
             >
-              &larr; Back to Home
+              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />
+              <span>Back to Home</span>
             </button>
           </motion.div>
         </div>
