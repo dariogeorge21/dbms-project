@@ -3,6 +3,7 @@ import dbConnect from "@/lib/db";
 import Consultation from "@/lib/models/Consultation";
 import Appointment from "@/lib/models/Appointment";
 import Doctor from "@/lib/models/Doctor";
+import Patient from "@/lib/models/Patient";
 import { getTokenPayload } from "@/lib/auth";
 
 // GET: list consultations
@@ -22,12 +23,19 @@ export async function GET(request: NextRequest) {
     if (payload.role === "doctor") {
       const doctor = await Doctor.findOne({ userId: payload.userId });
       if (doctor) query.doctorId = doctor._id;
+    } else if (payload.role === "patient") {
+      const patient = await Patient.findOne({ userId: payload.userId });
+      if (!patient) {
+        return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+      }
+      query.patientId = patient._id;
     }
     if (appointmentId) query.appointmentId = appointmentId;
 
     const consultations = await Consultation.find(query)
       .populate("appointmentId")
       .populate("patientId", "name patientId")
+      .populate("doctorId", "name doctorId specialization")
       .sort({ createdAt: -1 })
       .lean();
 
