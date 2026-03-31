@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
 import dbConnect from "@/lib/db";
 import Appointment from "@/lib/models/Appointment";
 import Patient from "@/lib/models/Patient";
@@ -24,6 +25,15 @@ function logApiError(operation: string, error: unknown, context: Record<string, 
     ...context,
     error: serializeError(error),
   });
+}
+
+function toRequiredString(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function toPositiveNumber(value: unknown): number {
+  const numeric = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(numeric) && numeric > 0 ? numeric : NaN;
 }
 
 // GET: list appointments filtered by role
@@ -107,30 +117,66 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    if (!mongoose.Types.ObjectId.isValid(payload.userId)) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const patient = await Patient.findOne({ userId: payload.userId });
     if (!patient) {
       return NextResponse.json({ error: "Patient profile not found" }, { status: 404 });
     }
 
     const body = await request.json();
-    const {
-      age, weight, height, location, sex,
-      bystanderName, bystanderPhone,
-      problemDescription, previousMedicalHistory,
-      preferredDoctorId, preferredTimeSlot,
-    } = body;
+    const age = toPositiveNumber(body.age);
+    const weight = toPositiveNumber(body.weight);
+    const height = toPositiveNumber(body.height);
+    const location = toRequiredString(body.location);
+    const sex = toRequiredString(body.sex).toLowerCase();
+    const bystanderName = toRequiredString(body.bystanderName);
+    const bystanderPhone = toRequiredString(body.bystanderPhone);
+    const problemDescription = toRequiredString(body.problemDescription);
+    const previousMedicalHistory = toRequiredString(body.previousMedicalHistory);
+    const preferredDoctorIdRaw = toRequiredString(body.preferredDoctorId);
+    const preferredTimeSlot = toRequiredString(body.preferredTimeSlot).toLowerCase();
 
     requestMeta = {
-      hasPreferredDoctorId: Boolean(preferredDoctorId),
+      hasPreferredDoctorId: Boolean(preferredDoctorIdRaw),
       preferredTimeSlot,
       hasProblemDescription: Boolean(problemDescription),
       hasPreviousMedicalHistory: Boolean(previousMedicalHistory),
     };
 
     // Validation
-    if (!age || !weight || !height || !location || !sex || !bystanderName || !bystanderPhone || !problemDescription || !previousMedicalHistory || !preferredTimeSlot) {
+    if (
+      Number.isNaN(age) ||
+      Number.isNaN(weight) ||
+      Number.isNaN(height) ||
+      !location ||
+      !sex ||
+      !bystanderName ||
+      !bystanderPhone ||
+      !problemDescription ||
+      !previousMedicalHistory ||
+      !preferredTimeSlot
+    ) {
       return NextResponse.json({ error: "All required fields must be filled" }, { status: 400 });
     }
+
+    if (!['morning', 'afternoon'].includes(preferredTimeSlot)) {
+      return NextResponse.json({ error: "Preferred time slot must be morning or afternoon" }, { status: 400 });
+    }
+
+    if (!['male', 'female', 'other'].includes(sex)) {
+      return NextResponse.json({ error: "Sex must be male, female, or other" }, { status: 400 });
+    }
+
+    if (preferredDoctorIdRaw && !mongoose.Types.ObjectId.isValid(preferredDoctorIdRaw)) {
+      return NextResponse.json({ error: "Invalid preferred doctor id" }, { status: 400 });
+    }
+
+    const preferredDoctorId = preferredDoctorIdRaw
+      ? new mongoose.Types.ObjectId(preferredDoctorIdRaw)
+      : null;
 
     const appointmentId = await getNextSequence("appointmentId", "APT-");
 
@@ -159,6 +205,44 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error: unknown) {
+    if (error instanceof mongoose.Error.ValidationError) {
+      logApiError("POST /api/appointments validation failed", error, {
+        method: request.method,
+        url: request.url,
+        userId: payload?.userId,
+        role: payload?.role,
+        requestMeta,
+      });
+      return NextResponse.json({ error: "Invalid appointment data" }, { status: 400 });
+    }
+
+    if (error instanceof mongoose.Error.CastError) {
+      logApiError("POST /api/appointments cast failed", error, {
+        method: request.method,
+        url: request.url,
+        userId: payload?.userId,
+        role: payload?.role,
+        requestMeta,
+      });
+      return NextResponse.json({ error: "Invalid request fields" }, { status: 400 });
+    }
+
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      (error as { code?: number }).code === 11000
+    ) {
+      logApiError("POST /api/appointments duplicate key", error, {
+        method: request.method,
+        url: request.url,
+        userId: payload?.userId,
+        role: payload?.role,
+        requestMeta,
+      });
+      return NextResponse.json({ error: "Duplicate appointment data" }, { status: 409 });
+    }
+
     logApiError("POST /api/appointments failed", error, {
       method: request.method,
       url: request.url,
