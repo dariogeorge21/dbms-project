@@ -16,6 +16,12 @@ const loadingMsgs = [
 export default function LandingPage() {
   const [loading, setLoading] = useState(true);
   const [msgIndex, setMsgIndex] = useState(0);
+  const [ctaIndex, setCtaIndex] = useState(0);
+
+  const ctaMessages = [
+    { label: "Book Appointment", href: "/patient" },
+    { label: "Check Existing Appointment", href: "/patient/login" },
+  ];
 
   useEffect(() => {
     const msgInterval = setInterval(() => {
@@ -31,6 +37,14 @@ export default function LandingPage() {
       clearTimeout(timer);
     };
   }, []);
+
+  useEffect(() => {
+    const ctaInterval = setInterval(() => {
+      setCtaIndex((prev) => (prev + 1) % ctaMessages.length);
+    }, 2000);
+
+    return () => clearInterval(ctaInterval);
+  }, [ctaMessages.length]);
 
   return (
     <>
@@ -140,13 +154,24 @@ export default function LandingPage() {
                 </p>
 
                 {/* CTA Button */}
-                <Link href="/patient">
+                <Link href={ctaMessages[ctaIndex].href}>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="px-12 py-5 rounded-[2rem] btn-super-glass text-xl font-bold tracking-wide relative group overflow-hidden"
                   >
-                    <span className="relative z-10 text-medical-primary group-hover:text-[#0056b3] transition-colors">Book Appointment</span>
+                    <AnimatePresence mode="wait">
+                      <motion.span
+                        key={ctaMessages[ctaIndex].label}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.3 }}
+                        className="relative z-10 text-medical-primary group-hover:text-[#0056b3] transition-colors"
+                      >
+                        {ctaMessages[ctaIndex].label}
+                      </motion.span>
+                    </AnimatePresence>
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
                   </motion.button>
                 </Link>
