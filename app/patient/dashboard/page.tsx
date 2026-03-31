@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import Navbar from "@/components/Navbar";
-import GlassCard from "@/components/GlassCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { SuccessModal } from "@/components/Modal";
 
@@ -32,10 +31,41 @@ interface AppointmentItem {
   createdAt: string;
 }
 
+interface MedicineItem {
+  medicineName: string;
+  dosage: string;
+  frequency: string;
+  duration: string;
+  notes: string;
+}
+
+interface VitalSignsItem {
+  bloodPressure: string;
+  pulse: number;
+  temperature: string;
+  spo2: string;
+  respiratoryRate: number;
+  weight: number;
+  height: number;
+}
+
+interface ConsultationItem {
+  _id: string;
+  appointmentId: string | { _id: string; appointmentId?: string };
+  doctorId?: { name: string; doctorId?: string; specialization?: string };
+  diagnosis: string;
+  description: string;
+  medicines: MedicineItem[];
+  vitalSigns: VitalSignsItem;
+  nextReviewDate?: string | null;
+  createdAt: string;
+}
+
 export default function PatientDashboardPage() {
   const router = useRouter();
   const [profile, setProfile] = useState<PatientProfile | null>(null);
   const [appointments, setAppointments] = useState<AppointmentItem[]>([]);
+  const [consultations, setConsultations] = useState<ConsultationItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState({ name: "", email: "", phone: "" });
@@ -44,9 +74,10 @@ export default function PatientDashboardPage() {
 
   const fetchData = useCallback(async () => {
     try {
-      const [meRes, aptRes] = await Promise.all([
+      const [meRes, aptRes, consRes] = await Promise.all([
         fetch("/api/auth/me"),
         fetch("/api/appointments"),
+        fetch("/api/consultations"),
       ]);
 
       if (!meRes.ok) {
@@ -70,6 +101,11 @@ export default function PatientDashboardPage() {
       if (aptRes.ok) {
         const aptData = await aptRes.json();
         setAppointments(aptData.appointments);
+      }
+
+      if (consRes.ok) {
+        const consData = await consRes.json();
+        setConsultations(consData.consultations || []);
       }
     } catch {
       router.push("/patient/login");
@@ -122,6 +158,33 @@ export default function PatientDashboardPage() {
 
   const inputClass =
     "w-full px-4 py-3 rounded-xl bg-white/50 border border-gray-200 text-medical-text placeholder-gray-400 focus:border-medical-primary focus:ring-2 focus:ring-blue-100 transition-all outline-none";
+
+  const getConsultationAppointmentId = (consultation: ConsultationItem) => {
+    if (typeof consultation.appointmentId === "string") {
+      return consultation.appointmentId;
+    }
+    return consultation.appointmentId?._id;
+  };
+
+  const consultationByAppointmentId = consultations.reduce<Record<string, ConsultationItem>>((acc, consultation) => {
+    const aptId = getConsultationAppointmentId(consultation);
+    if (aptId) {
+      acc[aptId] = consultation;
+    }
+    return acc;
+  }, {});
+
+  const completedAppointments = appointments.filter((apt) => apt.status === "completed");
+  const reportsReady = completedAppointments.filter((apt) => consultationByAppointmentId[apt._id]).length;
+  const pendingReports = completedAppointments.length - reportsReady;
+
+  const formatReviewStatus = (nextReviewDate?: string | null) => {
+    if (!nextReviewDate) return "No scheduled follow-up";
+    const review = new Date(nextReviewDate);
+    const now = new Date();
+    if (review < now) return `Review due on ${review.toLocaleDateString()}`;
+    return `Next review on ${review.toLocaleDateString()}`;
+  };
 
   return (
     <AnimatedBackground>
@@ -290,6 +353,157 @@ export default function PatientDashboardPage() {
 </div>
           </div>
         </div>
+
+        {/* Doctor Reports */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mt-6"
+        >
+          <div className="super-glass p-8 relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-white/50 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+            <div className="relative z-10">
+              <div className="flex flex-wrap items-center justify-between gap-4 mb-5">
+                <div>
+                  <h2 className="text-lg font-bold text-medical-text">Completed Appointment Reports</h2>
+                  <p className="text-sm text-medical-text-secondary">Doctor notes, prescription, vitals and next review guidance.</p>
+                </div>
+                <div className="flex items-center gap-2 text-xs">
+                  <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 font-semibold">
+                    {reportsReady} Reports Ready
+                  </span>
+                  {pendingReports > 0 && (
+                    <span className="px-3 py-1 rounded-full bg-amber-50 text-amber-700 font-semibold">
+                      {pendingReports} Pending Summary
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {completedAppointments.length === 0 ? (
+                <div className="p-5 rounded-xl bg-white/40 border border-gray-100 text-sm text-medical-text-secondary">
+                  Your completed consultations will appear here with detailed doctor reports.
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {completedAppointments.map((apt, i) => {
+                    const report = consultationByAppointmentId[apt._id];
+                    return (
+                      <motion.div
+                        key={apt._id}
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.06 }}
+                        className="p-5 rounded-2xl bg-white/45 border border-gray-100"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="text-sm font-semibold text-medical-text">{apt.appointmentId}</span>
+                            <span className="text-xs px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 font-medium">
+                              Completed
+                            </span>
+                            {apt.doctorId?.name && (
+                              <span className="text-xs px-2 py-1 rounded-full bg-blue-50 text-blue-700 font-medium">
+                                Dr. {apt.doctorId.name}
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-xs text-medical-text-secondary">
+                            {new Date(report?.createdAt || apt.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+
+                        <p className="text-sm text-medical-text-secondary mb-3">
+                          <span className="font-medium text-medical-text">Reason for visit:</span> {apt.problemDescription}
+                        </p>
+
+                        {!report ? (
+                          <div className="rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+                            Consultation is marked completed, but detailed doctor report has not been published yet.
+                          </div>
+                        ) : (
+                          <div className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="rounded-xl p-4 bg-white/70 border border-gray-100">
+                                <p className="text-xs text-medical-text-secondary uppercase tracking-wider mb-1">Diagnosis</p>
+                                <p className="text-sm font-medium text-medical-text">{report.diagnosis || "Not specified"}</p>
+                              </div>
+                              <div className="rounded-xl p-4 bg-white/70 border border-gray-100">
+                                <p className="text-xs text-medical-text-secondary uppercase tracking-wider mb-1">Follow-Up</p>
+                                <p className="text-sm font-medium text-medical-text">{formatReviewStatus(report.nextReviewDate)}</p>
+                              </div>
+                            </div>
+
+                            {report.description && (
+                              <div className="rounded-xl p-4 bg-sky-50/70 border border-sky-100">
+                                <p className="text-xs text-sky-700 uppercase tracking-wider mb-1 font-semibold">Doctor Notes</p>
+                                <p className="text-sm text-medical-text">{report.description}</p>
+                              </div>
+                            )}
+
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                              <div className="rounded-xl p-4 bg-white/70 border border-gray-100">
+                                <p className="text-xs text-medical-text-secondary uppercase tracking-wider mb-2">Prescribed Medicines</p>
+                                {report.medicines?.length ? (
+                                  <div className="space-y-2">
+                                    {report.medicines.map((med, medIndex) => (
+                                      <div key={`${report._id}-${medIndex}`} className="rounded-lg border border-gray-100 bg-white/80 px-3 py-2">
+                                        <p className="text-sm font-semibold text-medical-text">{med.medicineName}</p>
+                                        <p className="text-xs text-medical-text-secondary">
+                                          {med.dosage} | {med.frequency} | {med.duration}
+                                        </p>
+                                        {med.notes && <p className="text-xs text-medical-text-secondary mt-1">Note: {med.notes}</p>}
+                                      </div>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <p className="text-sm text-medical-text-secondary">No medicines prescribed.</p>
+                                )}
+                              </div>
+
+                              <div className="rounded-xl p-4 bg-white/70 border border-gray-100">
+                                <p className="text-xs text-medical-text-secondary uppercase tracking-wider mb-2">Recorded Vitals</p>
+                                <div className="grid grid-cols-2 gap-2 text-xs">
+                                  <div className="rounded-lg bg-gray-50 px-3 py-2">
+                                    <p className="text-medical-text-secondary">Blood Pressure</p>
+                                    <p className="font-semibold text-medical-text">{report.vitalSigns?.bloodPressure || "-"}</p>
+                                  </div>
+                                  <div className="rounded-lg bg-gray-50 px-3 py-2">
+                                    <p className="text-medical-text-secondary">Pulse</p>
+                                    <p className="font-semibold text-medical-text">{report.vitalSigns?.pulse || "-"}</p>
+                                  </div>
+                                  <div className="rounded-lg bg-gray-50 px-3 py-2">
+                                    <p className="text-medical-text-secondary">Temperature</p>
+                                    <p className="font-semibold text-medical-text">{report.vitalSigns?.temperature || "-"}</p>
+                                  </div>
+                                  <div className="rounded-lg bg-gray-50 px-3 py-2">
+                                    <p className="text-medical-text-secondary">SpO2</p>
+                                    <p className="font-semibold text-medical-text">{report.vitalSigns?.spo2 || "-"}</p>
+                                  </div>
+                                  <div className="rounded-lg bg-gray-50 px-3 py-2">
+                                    <p className="text-medical-text-secondary">Respiratory Rate</p>
+                                    <p className="font-semibold text-medical-text">{report.vitalSigns?.respiratoryRate || "-"}</p>
+                                  </div>
+                                  <div className="rounded-lg bg-gray-50 px-3 py-2">
+                                    <p className="text-medical-text-secondary">Weight / Height</p>
+                                    <p className="font-semibold text-medical-text">
+                                      {report.vitalSigns?.weight || "-"} kg / {report.vitalSigns?.height || "-"} cm
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        </motion.div>
       </div>
 
       <SuccessModal isOpen={showSuccess} onClose={() => setShowSuccess(false)} message={successMsg} />
