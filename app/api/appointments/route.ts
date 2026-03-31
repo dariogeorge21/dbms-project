@@ -6,11 +6,38 @@ import Doctor from "@/lib/models/Doctor";
 import { getNextSequence } from "@/lib/models/Counter";
 import { getTokenPayload } from "@/lib/auth";
 
+function serializeError(error: unknown) {
+  if (error instanceof Error) {
+    return {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+    };
+  }
+
+  return { value: String(error) };
+}
+
+function logApiError(operation: string, error: unknown, context: Record<string, unknown> = {}) {
+  console.error(`[Appointments API] ${operation}`, {
+    timestamp: new Date().toISOString(),
+    ...context,
+    error: serializeError(error),
+  });
+}
+
 // GET: list appointments filtered by role
 export async function GET(request: NextRequest) {
+  let payload: Awaited<ReturnType<typeof getTokenPayload>> | null = null;
+  const filters: Record<string, string | null> = {
+    status: null,
+    dateFrom: null,
+    dateTo: null,
+  };
+
   try {
     await dbConnect();
-    const payload = await getTokenPayload();
+    payload = await getTokenPayload();
     if (!payload) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -19,6 +46,10 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get("status");
     const dateFrom = searchParams.get("dateFrom");
     const dateTo = searchParams.get("dateTo");
+
+    filters.status = status;
+    filters.dateFrom = dateFrom;
+    filters.dateTo = dateTo;
 
     const query: Record<string, unknown> = {};
 
@@ -53,16 +84,25 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ appointments });
   } catch (error: unknown) {
-    console.error("Appointments GET error:", error);
+    logApiError("GET /api/appointments failed", error, {
+      method: request.method,
+      url: request.url,
+      userId: payload?.userId,
+      role: payload?.role,
+      filters,
+    });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
 // POST: patient creates an appointment
 export async function POST(request: NextRequest) {
+  let payload: Awaited<ReturnType<typeof getTokenPayload>> | null = null;
+  let requestMeta: Record<string, unknown> = {};
+
   try {
     await dbConnect();
-    const payload = await getTokenPayload();
+    payload = await getTokenPayload();
     if (!payload || payload.role !== "patient") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -79,6 +119,13 @@ export async function POST(request: NextRequest) {
       problemDescription, previousMedicalHistory,
       preferredDoctorId, preferredTimeSlot,
     } = body;
+
+    requestMeta = {
+      hasPreferredDoctorId: Boolean(preferredDoctorId),
+      preferredTimeSlot,
+      hasProblemDescription: Boolean(problemDescription),
+      hasPreviousMedicalHistory: Boolean(previousMedicalHistory),
+    };
 
     // Validation
     if (!age || !weight || !height || !location || !sex || !bystanderName || !bystanderPhone || !problemDescription || !previousMedicalHistory || !preferredTimeSlot) {
@@ -112,7 +159,13 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error: unknown) {
-    console.error("Appointments POST error:", error);
+    logApiError("POST /api/appointments failed", error, {
+      method: request.method,
+      url: request.url,
+      userId: payload?.userId,
+      role: payload?.role,
+      requestMeta,
+    });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
