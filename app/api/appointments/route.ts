@@ -36,6 +36,25 @@ function toPositiveNumber(value: unknown): number {
   return Number.isFinite(numeric) && numeric > 0 ? numeric : NaN;
 }
 
+let appointmentIndexesSynced = false;
+let appointmentIndexesSyncPromise: Promise<void> | null = null;
+
+async function ensureAppointmentIndexes() {
+  if (appointmentIndexesSynced) return;
+
+  if (!appointmentIndexesSyncPromise) {
+    appointmentIndexesSyncPromise = Appointment.syncIndexes()
+      .then(() => {
+        appointmentIndexesSynced = true;
+      })
+      .finally(() => {
+        appointmentIndexesSyncPromise = null;
+      });
+  }
+
+  await appointmentIndexesSyncPromise;
+}
+
 // GET: list appointments filtered by role
 export async function GET(request: NextRequest) {
   let payload: Awaited<ReturnType<typeof getTokenPayload>> | null = null;
@@ -177,6 +196,8 @@ export async function POST(request: NextRequest) {
     const preferredDoctorId = preferredDoctorIdRaw
       ? new mongoose.Types.ObjectId(preferredDoctorIdRaw)
       : null;
+
+    await ensureAppointmentIndexes();
 
     const appointmentId = await getNextSequence("appointmentId", "APT-");
 

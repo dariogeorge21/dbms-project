@@ -72,7 +72,7 @@ const AppointmentSchema = new Schema<IAppointment>(
       required: true,
     },
     assignedTimeSlot: { type: String, default: null },
-    tokenNumber: { type: String, default: null, unique: true, sparse: true },
+    tokenNumber: { type: String, default: null },
     status: {
       type: String,
       enum: ["requested", "assigned", "in_consultation", "completed", "cancelled"],
@@ -94,6 +94,15 @@ AppointmentSchema.index({ doctorId: 1 });
 AppointmentSchema.index({ status: 1 });
 AppointmentSchema.index({ appointmentDate: 1 });
 AppointmentSchema.index({ doctorId: 1, appointmentDate: 1, assignedTimeSlot: 1 });
+AppointmentSchema.index(
+  { tokenNumber: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      tokenNumber: { $type: "string" },
+    },
+  }
+);
 
 const Appointment: Model<IAppointment> =
   mongoose.models.Appointment ||
